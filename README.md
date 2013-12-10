@@ -49,7 +49,7 @@ In your home folder, you must create the `~/.rox/config.yml` configuration file.
 ```yml
 # List of ROX Center servers you can submit test results to.
 servers:
-  - name: rox.example.com                 # A custom name for your ROX Center server.
+  rox.example.com:                        # A custom name for your ROX Center server.
                                           # You will use this in the client configuration file.
                                           # We recommend using the domain name where you deployed it.
 
@@ -71,9 +71,8 @@ In the project directory where you run RSpec, you must add the `rox.yml` client 
 ```yml
 # Configuration specific to your project.
 project:
-  name: My Project
-  version: 1.2.3
   apiId: 154sic93pxs0   # The API key of your project in the ROX Center server.
+  version: 1.2.3
 
 # Where the client should store its temporary files.
 # The client will work without it but it is required for some advanced features.

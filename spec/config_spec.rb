@@ -120,12 +120,12 @@ describe RoxClient::RSpec::Config do
     describe "with full information in the home config" do
       let(:home_config){ %|
 servers:
-  - name: a
+  a:
     apiUrl: "http://example.com/api"
     apiKeyId: "0123456789"
     apiKeySecret: "abcdefghijklmnopqrstuvwxyz"
     projectApiId: "9876543210"
-  - name: b
+  b:
     apiUrl: "http://subdomain.example.com/api"
     apiKeyId: "1234567890"
     apiKeySecret: "bcdefghijklmnopqrstuvwxyza"
@@ -324,7 +324,7 @@ payload:
       describe "with an overriding working directory config" do
         let(:working_config){ %|
 servers:
-  - name: b
+  b:
     apiUrl: "http://other-subdomain.example.com/api"
     apiKeyId: "2345678901"
     apiKeySecret: "cdefghijklmnopqrstuvwxyzab"
@@ -371,23 +371,10 @@ workspace: /tmp
         it{ should have_elements_matching(:load_warnings, /no server defined/i) }
       end
 
-      describe "with an unnamed server" do
-        let(:working_config){ %|
-servers:
-  - name: a
-  - apiUrl: http://example.com/api
-server: a
-        | }
-        its(:server){ should_not be_nil }
-        its(:publish?){ should be_false }
-        its(:load_warnings){ should have(1).items }
-        it{ should have_elements_matching(:load_warnings, /ignoring unnamed server/i) }
-      end
-
       describe "with no server selected" do
         let(:working_config){ %|
 servers:
-  - name: a
+  a:
     apiUrl: http://example.com/api
 publish: true
         | }
@@ -400,7 +387,7 @@ publish: true
       describe "with an unknown server selected" do
         let(:working_config){ %|
 servers:
-  - name: a
+  a:
     apiUrl: http://example.com/api
 publish: true
 server: unknown

@@ -92,24 +92,11 @@ module RoxClient::RSpec
 
     def build_servers config
 
-      servers = {}
-
       default_server_options = { project_api_id: config[:project][:api_id] }
-      config[:servers].each do |server_options|
-
-        name = server_options[:name].to_s.strip
-        if name.empty?
-          @load_warnings << "Ignoring unnamed server"
-          next
-        elsif servers[name]
-          servers[name].merge! server_options
-          next
-        end
-
-        servers[name] = server_options
+      servers = config[:servers].inject({}) do |memo,(name, options)|
+        memo[name] = Server.new default_server_options.merge(options).merge(name: name)
+        memo
       end
-
-      servers.each_key{ |name| servers[name] = Server.new default_server_options.merge(servers[name]) }
 
       [ servers.values, servers[@server_name.to_s.strip] ]
     end
@@ -126,11 +113,20 @@ module RoxClient::RSpec
 
       actual_configs.collect!{ |f| YAML.load_file f }
 
-      actual_configs.inject({}) do |memo,yml|
+      actual_configs.inject({ servers: {} }) do |memo,yml|
         memo.merge! parse_general_options(yml)
-        memo[:servers] = (memo[:servers] || []) + (yml['servers'].kind_of?(Array) ? yml['servers'].collect{ |s| parse_server_options s } : [])
+
+        if yml['servers'].kind_of? Hash
+          yml['servers'].each_pair do |k,v|
+            if v.kind_of? Hash
+              memo[:servers][k] = (memo[:servers][k] || {}).merge(parse_server_options(v))
+            end
+          end
+        end
+
         memo[:payload] = (memo[:payload] || {}).merge parse_payload_options(yml['payload'])
         memo[:project] = (memo[:project] || {}).merge parse_project_options(yml['project'])
+
         memo
       end
     end
