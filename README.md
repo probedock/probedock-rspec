@@ -13,7 +13,7 @@
 In your Gemfile:
 
 ```rb
-gem 'rox-client-rspec', '~> 0.3.0'
+gem 'rox-client-rspec', '~> 0.3.1'
 ```
 
 Manually:

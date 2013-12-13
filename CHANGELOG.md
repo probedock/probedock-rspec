@@ -1,6 +1,6 @@
 # Changelog
 
-## Edge
+## v0.3.1 - December 13, 2013
 
 * The `servers` key in the YAML configuration file is now a hash instead of an array.
 
