@@ -35,11 +35,12 @@ describe RoxClient::RSpec::TestRun do
     let(:result_options){ {} }
     let(:new_result_double){ double }
     before :each do
-      TestResult.stub new: new_result_double
+      allow(TestResult).to receive(:new).and_return(new_result_double)
     end
 
     it "should add a new result" do
-      TestResult.stub extract_grouped: false, extract_key: nil
+      allow(TestResult).to receive(:extract_grouped).and_return(false)
+      allow(TestResult).to receive(:extract_key).and_return(nil)
       expect(TestResult).to receive(:new).with(project_double, example_double, group_doubles, result_options)
       add_result
       expect(subject.results).to eq([ new_result_double ])
@@ -48,7 +49,8 @@ describe RoxClient::RSpec::TestRun do
     it "should update an existing result" do
       existing_result = double key: 'abc', grouped?: true, update: nil
       subject.results << existing_result
-      TestResult.stub extract_grouped: true, extract_key: 'abc'
+      allow(TestResult).to receive(:extract_grouped).and_return(true)
+      allow(TestResult).to receive(:extract_key).and_return('abc')
       expect(TestResult).to receive(:extract_grouped).with(example_double, group_doubles)
       expect(TestResult).to receive(:extract_key).with(example_double, group_doubles)
       expect(TestResult).not_to receive(:new)
@@ -60,7 +62,8 @@ describe RoxClient::RSpec::TestRun do
     it "should not update an existing result that is not grouped" do
       existing_result = double key: 'abc', grouped?: false
       subject.results << existing_result
-      TestResult.stub extract_grouped: true, extract_key: 'abc'
+      allow(TestResult).to receive(:extract_grouped).and_return(true)
+      allow(TestResult).to receive(:extract_key).and_return('abc')
       expect(TestResult).to receive(:extract_grouped).with(example_double, group_doubles)
       expect(TestResult).to receive(:new).with(project_double, example_double, group_doubles, result_options)
       expect(existing_result).not_to receive(:update)
@@ -71,7 +74,8 @@ describe RoxClient::RSpec::TestRun do
     it "should not update an existing result if the key doesn't match" do
       existing_result = double key: 'abc', grouped?: true
       subject.results << existing_result
-      TestResult.stub extract_grouped: true, extract_key: 'bcd'
+      allow(TestResult).to receive(:extract_grouped).and_return(true)
+      allow(TestResult).to receive(:extract_key).and_return('bcd')
       expect(TestResult).to receive(:extract_grouped).with(example_double, group_doubles)
       expect(TestResult).to receive(:extract_key).with(example_double, group_doubles)
       expect(TestResult).to receive(:new).with(project_double, example_double, group_doubles, result_options)
@@ -110,7 +114,7 @@ describe RoxClient::RSpec::TestRun do
       end
 
       describe "when the project fails to validate" do
-        let(:project_double){ super().tap{ |d| d.stub(:validate!).and_raise(PayloadError.new('bug')) } }
+        let(:project_double){ super().tap{ |d| allow(d).to receive(:validate!).and_raise(PayloadError.new('bug')) } }
 
         it "should raise a payload error with the same message" do
           expect{ subject.to_h }.to raise_payload_error(/bug/i)

@@ -27,12 +27,12 @@ describe RoxClient::RSpec::Cache do
 
   it "should not know a result" do
     result = double key: 'abc'
-    expect(subject.known?(result)).to be_false
+    expect(subject.known?(result)).to be(false)
   end
 
   it "should not have a result marked as stale" do
     result = double key: 'abc'
-    expect(subject.stale?(result)).to be_false
+    expect(subject.stale?(result)).to be(false)
   end
 
   describe "#load" do
@@ -40,8 +40,8 @@ describe RoxClient::RSpec::Cache do
     it "should not load anything if the cache file doesn't exist" do
       subject.load
       result = double key: 'abc'
-      expect(subject.known?(result)).to be_false
-      expect(subject.stale?(result)).to be_false
+      expect(subject.known?(result)).to be(false)
+      expect(subject.stale?(result)).to be(false)
     end
 
     it "should raise an error with no workspace" do
@@ -64,51 +64,51 @@ describe RoxClient::RSpec::Cache do
       end
 
       it "should know cached test results" do
-        TESTS.each{ |d| expect(subject.known?(double(key: d[:data][:key]))).to be_true }
-        %w(def efg ghi).each{ |k| expect(subject.known?(double(key: k))).to be_false }
+        TESTS.each{ |d| expect(subject.known?(double(key: d[:data][:key]))).to be(true) }
+        %w(def efg ghi).each{ |k| expect(subject.known?(double(key: k))).to be(false) }
       end
 
       it "should not indicate unchanged tests as stale" do
-        TESTS.reject{ |d| d[:stale] }.each{ |d| expect(subject.stale?(double(d[:data]))).to be_false, "Test #{d[:data]} with hash #{d[:hash]} should not be stale" }
+        TESTS.reject{ |d| d[:stale] }.each{ |d| expect(subject.stale?(double(d[:data]))).to be(false), "Test #{d[:data]} with hash #{d[:hash]} should not be stale" }
       end
 
       it "should detect stale tests" do
-        TESTS.select{ |d| d[:stale] }.each{ |d| expect(subject.stale?(double(d[:data]))).to be_true, "Test #{d[:data]} with hash #{d[:hash]} should be stale" }
+        TESTS.select{ |d| d[:stale] }.each{ |d| expect(subject.stale?(double(d[:data]))).to be(true), "Test #{d[:data]} with hash #{d[:hash]} should be stale" }
       end
 
       it "should mark a test as stale if the name changes" do
-        expect(subject.stale?(double(TESTS[0][:data].merge(name: 'foo')))).to be_true
-        expect(subject.stale?(double(TESTS[1][:data].merge(name: 'foo')))).to be_true
+        expect(subject.stale?(double(TESTS[0][:data].merge(name: 'foo')))).to be(true)
+        expect(subject.stale?(double(TESTS[1][:data].merge(name: 'foo')))).to be(true)
       end
 
       it "should mark a test as stale if the category changes" do
-        expect(subject.stale?(double(TESTS[0][:data].merge(category: 'foo')))).to be_true
-        expect(subject.stale?(double(TESTS[1][:data].merge(category: nil)))).to be_true
+        expect(subject.stale?(double(TESTS[0][:data].merge(category: 'foo')))).to be(true)
+        expect(subject.stale?(double(TESTS[1][:data].merge(category: nil)))).to be(true)
       end
 
       it "should mark a test as stale if the tags change" do
-        expect(subject.stale?(double(TESTS[0][:data].merge(tags: %w(a b))))).to be_true
-        expect(subject.stale?(double(TESTS[1][:data].merge(tags: %w(d e f g))))).to be_true
+        expect(subject.stale?(double(TESTS[0][:data].merge(tags: %w(a b))))).to be(true)
+        expect(subject.stale?(double(TESTS[1][:data].merge(tags: %w(d e f g))))).to be(true)
       end
 
       it "should mark a test as stale if the tickets change" do
-        expect(subject.stale?(double(TESTS[0][:data].merge(tickets: %w(t1 t2 t3))))).to be_true
-        expect(subject.stale?(double(TESTS[1][:data].merge(tickets: [])))).to be_true
+        expect(subject.stale?(double(TESTS[0][:data].merge(tickets: %w(t1 t2 t3))))).to be(true)
+        expect(subject.stale?(double(TESTS[1][:data].merge(tickets: [])))).to be(true)
       end
 
       it "should not mark a test as stale if the status changes" do
-        expect(subject.stale?(double(TESTS[0][:data].merge(passed?: false)))).to be_false
-        expect(subject.stale?(double(TESTS[1][:data].merge(passed?: true)))).to be_false
+        expect(subject.stale?(double(TESTS[0][:data].merge(passed?: false)))).to be(false)
+        expect(subject.stale?(double(TESTS[1][:data].merge(passed?: true)))).to be(false)
       end
 
       it "should not mark a test as stale if the duration changes" do
-        expect(subject.stale?(double(TESTS[0][:data].merge(duration: 42)))).to be_false
-        expect(subject.stale?(double(TESTS[1][:data].merge(duration: 24)))).to be_false
+        expect(subject.stale?(double(TESTS[0][:data].merge(duration: 42)))).to be(false)
+        expect(subject.stale?(double(TESTS[1][:data].merge(duration: 24)))).to be(false)
       end
 
       it "should not mark a test as stale if the message changes" do
-        expect(subject.stale?(double(TESTS[0][:data].merge(message: 'Broken')))).to be_false
-        expect(subject.stale?(double(TESTS[1][:data].merge(message: nil)))).to be_false
+        expect(subject.stale?(double(TESTS[0][:data].merge(message: 'Broken')))).to be(false)
+        expect(subject.stale?(double(TESTS[1][:data].merge(message: nil)))).to be(false)
       end
     end
   end
@@ -118,7 +118,7 @@ describe RoxClient::RSpec::Cache do
 
     it "should create the directory of the cache file" do
       subject.save empty_test_run
-      expect(File.directory?(File.dirname(cache_file))).to be_true
+      expect(File.directory?(File.dirname(cache_file))).to be(true)
     end
 
     it "should save an empty test run" do

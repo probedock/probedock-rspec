@@ -33,8 +33,8 @@ describe RoxClient::RSpec::Server do
 
     before :each do
       ENV.delete_if{ |k,v| k.match(/\AROX_/) }
-      HTTParty.stub(:get){ http_responses.shift }
-      HTTParty.stub(:post){ http_responses.shift }
+      allow(HTTParty).to receive(:get){ http_responses.shift }
+      allow(HTTParty).to receive(:post){ http_responses.shift }
     end
 
     describe "when everything works" do

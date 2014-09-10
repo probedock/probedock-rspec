@@ -14,13 +14,13 @@ describe RoxClient::RSpec::Config do
   subject{ config }
 
   before :each do
-    Project.stub(:new).and_return(project_double)
-    Server.stub(:new){ |options| server_double(options).tap{ |d| server_doubles << d } }
+    allow(Project).to receive(:new).and_return(project_double)
+    allow(Server).to receive(:new){ |options| server_double(options).tap{ |d| server_doubles << d } }
   end
 
   describe ".config" do
     let(:new_config){ double load: nil }
-    before(:each){ RoxClient::RSpec::Config.stub new: new_config }
+    before(:each){ allow(RoxClient::RSpec::Config).to receive(:new).and_return(new_config) }
     
     it "should create, load and memoize a configuration" do
       expect(new_config).to receive(:load).once
@@ -31,7 +31,7 @@ describe RoxClient::RSpec::Config do
   describe ".configure" do
     let(:load_warnings){ [] }
     let(:config){ double load: nil, setup!: nil, load_warnings: load_warnings }
-    before(:each){ RoxClient::RSpec.stub config: config }
+    before(:each){ allow(RoxClient::RSpec).to receive(:config).and_return(config) }
 
     it "should yield and return the configuration" do
       result = nil
@@ -71,7 +71,7 @@ describe RoxClient::RSpec::Config do
   end
 
   before :each do
-    RSpec.stub(:configure).and_yield(rspec_config)
+    allow(RSpec).to receive(:configure).and_yield(rspec_config)
     @rox_env_vars = ENV.select{ |k,v| k.match /\AROX_/ }.each_key{ |k| ENV.delete k }
   end
 
@@ -80,12 +80,12 @@ describe RoxClient::RSpec::Config do
   end
 
   describe "default attributes" do
-    its(:publish?){ should be_false }
-    its(:local_mode?){ should be_false }
+    its(:publish?){ should be(false) }
+    its(:local_mode?){ should be(false) }
     its(:project){ should be(project_double) }
-    its(:cache_payload?){ should be_false }
-    its(:print_payload?){ should be_false }
-    its(:save_payload?){ should be_false }
+    its(:cache_payload?){ should be(false) }
+    its(:print_payload?){ should be(false) }
+    its(:save_payload?){ should be(false) }
     its(:servers){ should be_empty }
     its(:server){ should be_nil }
     its(:workspace){ should be_nil }
@@ -358,7 +358,7 @@ workspace: /tmp
 
       describe "with no config files" do
         its(:server){ should be_nil }
-        its(:publish?){ should be_false }
+        its(:publish?){ should be(false) }
         its(:load_warnings){ should have(1).items }
         it("should warn that no config file was found"){ should have_elements_matching(:load_warnings, /no config file found/, home_config_path, working_config_path) }
       end
@@ -366,7 +366,7 @@ workspace: /tmp
       describe "with no server" do
         let(:working_config){ "publish: true" }
         its(:server){ should be_nil }
-        its(:publish?){ should be_true }
+        its(:publish?){ should be(true) }
         its(:load_warnings){ should have(1).items }
         it{ should have_elements_matching(:load_warnings, /no server defined/i) }
       end
@@ -379,7 +379,7 @@ servers:
 publish: true
         | }
         its(:server){ should be_nil }
-        its(:publish?){ should be_true }
+        its(:publish?){ should be(true) }
         its(:load_warnings){ should have(1).items }
         it{ should have_elements_matching(:load_warnings, /no server name given/i) }
       end
@@ -393,7 +393,7 @@ publish: true
 server: unknown
         | }
         its(:server){ should be_nil }
-        its(:publish?){ should be_true }
+        its(:publish?){ should be(true) }
         its(:load_warnings){ should have(1).items }
         it{ should have_elements_matching(:load_warnings, /unknown server 'unknown'/i) }
       end

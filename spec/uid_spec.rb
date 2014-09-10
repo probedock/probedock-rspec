@@ -97,12 +97,12 @@ describe RoxClient::RSpec::UID do
 
     it "should clean the uid file" do
       subject.clean_uid
-      expect(File.exists?(uid_file)).to be_false
+      expect(File.exists?(uid_file)).to be(false)
     end
 
     it "should clean the environment variable" do
       subject.clean_uid
-      expect(ENV.key?(ENVIRONMENT_VARIABLE)).to be_false
+      expect(ENV.key?(ENVIRONMENT_VARIABLE)).to be(false)
     end
   end
 

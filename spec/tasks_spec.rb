@@ -13,8 +13,8 @@ describe RoxClient::RSpec::Tasks do
 
   before :each do
     Rake::Task.clear
-    RoxClient::RSpec.stub config: config_double
-    UID.stub new: uid_double
+    allow(RoxClient::RSpec).to receive(:config).and_return(config_double)
+    allow(UID).to receive(:new).and_return(uid_double)
     subject
   end
 
@@ -25,7 +25,7 @@ describe RoxClient::RSpec::Tasks do
   end
 
   shared_examples_for "a task" do |task_name,method,error_message|
-    let(:uid_double){ double.tap{ |d| d.stub(method).and_raise(UID::Error.new(error_message)) } }
+    let(:uid_double){ double.tap{ |d| allow(d).to receive(method).and_raise(UID::Error.new(error_message)) } }
 
     it "should output the error message to stderr" do
       c = nil
@@ -37,7 +37,7 @@ describe RoxClient::RSpec::Tasks do
     describe "with trace enabled" do
       before :each do
         options = Rake.application.options
-        Rake.application.stub options: options.dup.tap{ |o| o.trace = true }
+        allow(Rake.application).to receive(:options).and_return(options.dup.tap{ |o| o.trace = true })
       end
 
       it "should raise the error" do

@@ -32,7 +32,7 @@ Test keys are assigned to test using RSpec metadata:
 
 ```rb
 it "should work", rox: { key: 'abcdefghijkl' } do
-  expect(true).to be_true
+  expect(true).to be(true)
 end
 
 it(nil, rox: { key: 'bcdefghijklm' }){ should validate_presence_of(:name) }

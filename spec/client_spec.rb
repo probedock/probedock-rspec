@@ -34,9 +34,9 @@ describe RoxClient::RSpec::Client do
   subject{ client }
 
   before :each do
-    RoxClient::RSpec::Cache.stub new: cache_double
-    RoxClient::RSpec::TestPayload.stub new: payload_double
-    RoxClient::RSpec::UID.stub new: uid_double
+    allow(RoxClient::RSpec::Cache).to receive(:new).and_return(cache_double)
+    allow(RoxClient::RSpec::TestPayload).to receive(:new).and_return(payload_double)
+    allow(RoxClient::RSpec::UID).to receive(:new).and_return(uid_double)
   end
 
   describe "when created" do
@@ -85,7 +85,7 @@ describe RoxClient::RSpec::Client do
   end
 
   describe "when the payload cannot be serialized" do
-    before(:each){ payload_double.stub(:to_h).and_raise(RoxClient::RSpec::PayloadError.new('bug')) }
+    before(:each){ allow(payload_double).to receive(:to_h).and_raise(RoxClient::RSpec::PayloadError.new('bug')) }
     it "should output the error to stderr" do
       expect_processed false, stderr: [ 'bug' ]
     end
@@ -101,14 +101,14 @@ describe RoxClient::RSpec::Client do
 
   describe "when publishing fails due to a configuration error" do
     it "should output the error message to stderr" do
-      server.stub(:upload).and_raise(RoxClient::RSpec::Server::Error.new("bug"))
+      allow(server).to receive(:upload).and_raise(RoxClient::RSpec::Server::Error.new("bug"))
       expect_processed false, SENDING_PAYLOAD_MSG, API_URL, stderr: [ UPLOAD_FAILED_MSG, 'bug' ]
     end
   end
 
   describe "when publishing fails due to a server error" do
     it "should output the error message and response body to stderr" do
-      server.stub(:upload).and_raise(RoxClient::RSpec::Server::Error.new("bug", double(body: 'fubar')))
+      allow(server).to receive(:upload).and_raise(RoxClient::RSpec::Server::Error.new("bug", double(body: 'fubar')))
       expect_processed false, SENDING_PAYLOAD_MSG, API_URL, stderr: [ UPLOAD_FAILED_MSG, 'bug', DUMPING_RESPONSE_MSG, 'fubar' ]
     end
   end
@@ -116,7 +116,8 @@ describe RoxClient::RSpec::Client do
   describe "with payload caching enabled" do
     let(:client_options){ super().merge cache_payload: true }
     before :each do
-      cache_double.stub load: cache_double, save: cache_double
+      allow(cache_double).to receive(:load).and_return(cache_double)
+      allow(cache_double).to receive(:save).and_return(cache_double)
     end
 
     it "should load the cache" do
@@ -126,13 +127,13 @@ describe RoxClient::RSpec::Client do
     end
 
     it "should output any error to stderr and not save the cache" do
-      cache_double.stub(:load).and_raise(RoxClient::RSpec::Cache::Error.new('bug'))
+      allow(cache_double).to receive(:load).and_raise(RoxClient::RSpec::Cache::Error.new('bug'))
       expect(cache_double).not_to receive(:save)
       expect_processed true, SENDING_PAYLOAD_MSG, API_URL, DONE_MSG, stderr: [ 'bug' ]
     end
 
     it "should not save the cache if publishing fails" do
-      server.stub(:upload).and_raise(RoxClient::RSpec::Server::Error.new("bug"))
+      allow(server).to receive(:upload).and_raise(RoxClient::RSpec::Server::Error.new("bug"))
       expect(cache_double).to receive(:load)
       expect(cache_double).not_to receive(:save)
       expect_processed false, SENDING_PAYLOAD_MSG, API_URL, stderr: [ UPLOAD_FAILED_MSG, 'bug' ]
@@ -147,7 +148,7 @@ describe RoxClient::RSpec::Client do
     end
 
     it "should use inspect if the payload can't be pretty-printed" do
-      JSON.stub(:pretty_generate).and_raise(StandardError.new('bug'))
+      allow(JSON).to receive(:pretty_generate).and_raise(StandardError.new('bug'))
       expect_processed true, SENDING_PAYLOAD_MSG, API_URL, DONE_MSG, PRINTING_PAYLOAD_MSG, payload_to_h.inspect
     end
   end
@@ -164,7 +165,7 @@ describe RoxClient::RSpec::Client do
 
     it "should create the workspace directory" do
       expect_processed true, SENDING_PAYLOAD_MSG, API_URL, DONE_MSG
-      expect(File.directory?(File.dirname(payload_file))).to be_true
+      expect(File.directory?(File.dirname(payload_file))).to be(true)
       expect_payload_to_be_saved
     end
 

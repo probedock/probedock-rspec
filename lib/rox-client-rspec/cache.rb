@@ -34,11 +34,11 @@ module RoxClient::RSpec
     end
 
     def known? test_result
-      @tests[@project_api_id] && !!@tests[@project_api_id][test_result.key]
+      !!@tests[@project_api_id] && !!@tests[@project_api_id][test_result.key]
     end
 
     def stale? test_result
-      @tests[@project_api_id] && test_result_hash(test_result) != @tests[@project_api_id][test_result.key]
+      !!@tests[@project_api_id] && test_result_hash(test_result) != @tests[@project_api_id][test_result.key]
     end
 
     private

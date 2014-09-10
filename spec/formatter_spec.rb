@@ -14,9 +14,9 @@ describe RoxClient::RSpec::Formatter do
   subject{ new_formatter }
 
   before :each do
-    RoxClient::RSpec.stub config: config_double
-    Client.stub new: client_double
-    TestRun.stub new: run_double
+    allow(RoxClient::RSpec).to receive(:config).and_return(config_double)
+    allow(Client).to receive(:new).and_return(client_double)
+    allow(TestRun).to receive(:new).and_return(run_double)
   end
 
   describe "when created" do
@@ -37,7 +37,7 @@ describe RoxClient::RSpec::Formatter do
     let(:now){ Time.now }
     before :each do
 
-      Time.stub now: now
+      allow(Time).to receive(:now).and_return(now)
       subject.start 0
 
       empty_group = group_double "Pending"
@@ -49,7 +49,7 @@ describe RoxClient::RSpec::Formatter do
       end_time = now + 12
       expect(run_double).to receive(:end_time=).with(end_time.to_i * 1000)
       expect(run_double).to receive(:duration=).with(12000)
-      Time.stub now: end_time
+      allow(Time).to receive(:now).and_return(end_time)
       subject.stop
     end
 
@@ -72,12 +72,12 @@ describe RoxClient::RSpec::Formatter do
       ex = example_double 'should work'
 
       now = Time.now
-      Time.stub now: now
+      allow(Time).to receive(:now).and_return(now)
       subject.example_started ex
 
       expect(run_double).to receive(:add_result).with(ex, example_groups, passed: true, duration: 3000)
 
-      Time.stub now: now + 3
+      allow(Time).to receive(:now).and_return(now + 3)
       subject.example_passed ex
     end
 
@@ -87,11 +87,11 @@ describe RoxClient::RSpec::Formatter do
       ex = example_double 'should probably work', exception: error
 
       now = Time.now
-      Time.stub now: now
+      allow(Time).to receive(:now).and_return(now)
       subject.example_started ex
 
-      subject.stub read_failed_line: 'line 1'
-      subject.stub(:format_backtrace){ |backtrace,*args| backtrace }
+      allow(subject).to receive(:read_failed_line).and_return('line 1')
+      allow(subject).to receive(:format_backtrace){ |backtrace,*args| backtrace }
 
       expected_message = Array.new.tap do |a|
         a << "Group A Group B should probably work"
@@ -105,7 +105,7 @@ describe RoxClient::RSpec::Formatter do
 
       expect(run_double).to receive(:add_result).with(ex, example_groups, passed: false, duration: 2000, message: expected_message)
 
-      Time.stub now: now + 2
+      allow(Time).to receive(:now).and_return(now + 2)
       subject.example_failed ex
     end
   end

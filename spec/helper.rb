@@ -13,6 +13,8 @@ require 'simplecov'
 SimpleCov.start
 
 require 'rspec'
+require 'rspec/its'
+require 'rspec/collection_matchers'
 require 'fakefs/spec_helpers'
 
 Dir[File.join(File.dirname(__FILE__), 'support/**/*.rb')].each{ |f| require f }

@@ -25,7 +25,7 @@ describe RoxClient::RSpec::TestResult do
   end
 
   it "should use the supplied result data" do
-    expect(subject.passed?).to be_true
+    expect(subject.passed?).to be(true)
     expect(subject.duration).to eq(42)
     expect(subject.message).to be_nil
   end
@@ -42,7 +42,7 @@ describe RoxClient::RSpec::TestResult do
     let(:result_options){ { passed: false, duration: 12, message: 'Oops' } }
 
     it "should use the supplied result data" do
-      expect(subject.passed?).to be_false
+      expect(subject.passed?).to be(false)
       expect(subject.duration).to eq(12)
       expect(subject.message).to eq('Oops')
     end
@@ -58,7 +58,7 @@ describe RoxClient::RSpec::TestResult do
     end
 
     it "should mark the result as grouped" do
-      expect(subject.grouped?).to be_true
+      expect(subject.grouped?).to be(true)
     end
 
     it "should use the grouped key" do
@@ -116,7 +116,7 @@ describe RoxClient::RSpec::TestResult do
       let(:updates){ super() << update_options }
 
       it "should mark the result as failed" do
-        expect(subject.passed?).to be_false
+        expect(subject.passed?).to be(false)
       end
 
       it "should increase the duration" do
@@ -132,7 +132,7 @@ describe RoxClient::RSpec::TestResult do
         let(:updates){ super() << other_update_options }
 
         it "should keep the result marked as failed" do
-          expect(subject.passed?).to be_false
+          expect(subject.passed?).to be(false)
         end
 
         it "should increase the duration" do
@@ -264,13 +264,13 @@ describe RoxClient::RSpec::TestResult do
     it "should not indicate a normal example as grouped" do
       example = double metadata: { rox: { key: 'abc' } }
       groups = [ group_double('a'), group_double('b') ]
-      expect(subject.extract_grouped(example, groups)).to be_false
+      expect(subject.extract_grouped(example, groups)).to be(false)
     end
 
     it "should detect a grouped example" do
       example = double metadata: {}
       groups = [ group_double('a'), group_double('b', key: 'cde', grouped: true) ]
-      expect(subject.extract_key(example, groups)).to be_true
+      expect(subject.extract_grouped(example, groups)).to be(true)
     end
   end
 

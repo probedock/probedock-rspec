@@ -2,7 +2,7 @@
 module RoxClient::RSpec
 
   class TestResult
-    attr_reader :key, :name, :category, :tags, :tickets, :duration, :message
+    attr_reader :key, :name, :category, :tags, :tickets, :data, :duration, :message
 
     def initialize project, example, groups = [], options = {}
 
@@ -12,7 +12,7 @@ module RoxClient::RSpec
 
       @grouped = extract_grouped example, groups
 
-      [ :key, :name, :category, :tags, :tickets ].each do |attr|
+      [ :key, :name, :category, :tags, :tickets, :data ].each do |attr|
         instance_variable_set "@#{attr}".to_sym, send("extract_#{attr}".to_sym, example, groups)
       end
 
@@ -51,6 +51,7 @@ module RoxClient::RSpec
         h['c'] = @category if stale or (first and @category)
         h['g'] = @tags if stale or (first and !@tags.empty?)
         h['t'] = @tickets if stale or (first and !@tickets.empty?)
+        h['a'] = @data if @data # FIXME: cache custom data
       end
     end
 
@@ -105,6 +106,10 @@ module RoxClient::RSpec
 
     def extract_tickets example, groups = []
       (wrap(@tickets) + groups.collect{ |g| wrap meta(g)[:tickets] } + (wrap meta(example)[:tickets])).flatten.compact.uniq.collect(&:to_s)
+    end
+
+    def extract_data example, groups = []
+      meta(example)[:data]
     end
 
     def wrap a
