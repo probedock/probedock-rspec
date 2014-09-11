@@ -4,10 +4,12 @@ require 'rspec/core/formatters/base_formatter'
 
 module RoxClient::RSpec
 
-  class Formatter < RSpec::Core::Formatters::BaseFormatter
+  class Formatter
 
-    def initialize *args
-      super *args
+    RSpec::Core::Formatters.register self, :start, :stop, :close,
+      :example_group_started, :example_started, :example_passed, :example_failed, :example_group_finished
+
+    def initialize output
 
       config = RoxClient::RSpec.config
       @client = Client.new config.server, config.client_options
@@ -16,38 +18,38 @@ module RoxClient::RSpec
       @groups = []
     end
 
-    def start example_count
+    def start notification
       # TODO: measure milliseconds
       @start_time = Time.now
     end
 
-    def example_group_started group
-      @groups << group
+    def example_group_started group_notification
+      @groups << group_notification.group
     end
 
-    def example_group_finished group
+    def example_group_finished group_notification
       @groups.pop
     end
 
-    def example_started example
+    def example_started example_notification
       @current_time = Time.now
     end
 
-    def example_passed example
-      add_result example, true
+    def example_passed example_notification
+      add_result example_notification.example, true
     end
 
-    def example_failed example
-      add_result example, false
+    def example_failed example_notification
+      add_result example_notification.example, false
     end
 
-    def stop
+    def stop notification
       end_time = Time.now
       @test_run.end_time = end_time.to_i * 1000
       @test_run.duration = ((end_time - @start_time) * 1000).round
     end
 
-    def dump_summary duration, example_count, failure_count, pending_count
+    def close notification
       @client.process @test_run
     end
 

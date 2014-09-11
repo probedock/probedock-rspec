@@ -41,8 +41,8 @@ describe RoxClient::RSpec::Formatter do
       subject.start 0
 
       empty_group = group_double "Pending"
-      subject.example_group_started empty_group
-      subject.example_group_finished empty_group
+      subject.example_group_started double(group: empty_group)
+      subject.example_group_finished double(group: empty_group)
     end
 
     it "should set the end time and duration when stopped" do
@@ -50,13 +50,13 @@ describe RoxClient::RSpec::Formatter do
       expect(run_double).to receive(:end_time=).with(end_time.to_i * 1000)
       expect(run_double).to receive(:duration=).with(12000)
       allow(Time).to receive(:now).and_return(end_time)
-      subject.stop
+      subject.stop double
     end
 
     it "should send the test run to be processed by the client when dumping the summary" do
       expect(client_double).to receive(:process).with(run_double)
-      subject.stop
-      subject.dump_summary 12, 0, 0, 0
+      subject.stop double
+      subject.close double
     end
   end
 
@@ -64,7 +64,7 @@ describe RoxClient::RSpec::Formatter do
     let(:example_groups){ [ group_double('Group A'), group_double('Group B') ] }
     before :each do
       subject.start 2
-      example_groups.each{ |g| subject.example_group_started g }
+      example_groups.each{ |g| subject.example_group_started double(group: g) }
     end
     
     it "should add a successful result to the test run" do
@@ -73,12 +73,12 @@ describe RoxClient::RSpec::Formatter do
 
       now = Time.now
       allow(Time).to receive(:now).and_return(now)
-      subject.example_started ex
+      subject.example_started double(example: ex)
 
       expect(run_double).to receive(:add_result).with(ex, example_groups, passed: true, duration: 3000)
 
       allow(Time).to receive(:now).and_return(now + 3)
-      subject.example_passed ex
+      subject.example_passed double(example: ex)
     end
 
     it "should add a failed result to the test run " do
@@ -88,7 +88,7 @@ describe RoxClient::RSpec::Formatter do
 
       now = Time.now
       allow(Time).to receive(:now).and_return(now)
-      subject.example_started ex
+      subject.example_started double(example: ex)
 
       allow(subject).to receive(:read_failed_line).and_return('line 1')
       allow(subject).to receive(:format_backtrace){ |backtrace,*args| backtrace }
@@ -106,7 +106,7 @@ describe RoxClient::RSpec::Formatter do
       expect(run_double).to receive(:add_result).with(ex, example_groups, passed: false, duration: 2000, message: expected_message)
 
       allow(Time).to receive(:now).and_return(now + 2)
-      subject.example_failed ex
+      subject.example_failed double(example: ex)
     end
   end
 

@@ -18,7 +18,6 @@ module RoxClient::RSpec
 
     def process test_run
 
-      puts
       return fail "No server to publish results to" if !@server
 
       test_run.uid = @uid.load_uid
@@ -42,6 +41,8 @@ module RoxClient::RSpec
 
       save_payload payload if @save_payload
       print_payload payload if @print_payload
+
+      puts
 
       published
     end
