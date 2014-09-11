@@ -6,14 +6,15 @@
 
 ## Requirements
 
-* RSpec 2.14
+* RSpec 3.1 (0.4.0+)
+  * *RSpec 2.14 is supported up to version 0.3.1*
 
 ## Installation
 
 In your Gemfile:
 
 ```rb
-gem 'rox-client-rspec', '~> 0.3.1'
+gem 'rox-client-rspec', '~> 0.4.0'
 ```
 
 Manually:
@@ -41,67 +42,12 @@ it(nil, rox: { key: 'bcdefghijklm' }){ should validate_presence_of(:name) }
 <a name="setup"></a>
 ## Setup
 
-ROX clients use [YAML](http://yaml.org) files for configuration.
-To use the RSpec ROX Client, you need two configuration files and you must set up the client in your spec helper file.
+You must first set up the configuration file(s) for the project.
+This procedure is described in the [rox-client](https://github.com/lotaris/rox-client) repository:
 
-In your home folder, you must create the `~/.rox/config.yml` configuration file.
+* [ROX Center Client Configuration](https://github.com/lotaris/rox-client#setup-procedure)
 
-```yml
-# List of ROX Center servers you can submit test results to.
-servers:
-  rox.example.com:                        # A custom name for your ROX Center server.
-                                          # You will use this in the client configuration file.
-                                          # We recommend using the domain name where you deployed it.
-
-    apiUrl: https://rox.example.com/api   # The URL of your ROX Center server's API.
-                                          # This is the domain where you deployed it with /api.
-
-    apiKeyId: 39fuc7x85lsoy9c0ek2d        # Your user credentials on this server.
-    apiKeySecret: mwpqvvmagzoegxnqptxdaxkxonjmvrlctwcrfmowibqcpnsdqd
-
-# If true, test results will be uploaded to ROX Center.
-# Set to false to temporarily disable publishing.
-# You can change this at runtime from the command line by setting the
-# ROX_PUBLISH environment variable to 0 (false) or 1 (true).
-publish: true
-```
-
-In the project directory where you run RSpec, you must add the `rox.yml` client configuration file:
-
-```yml
-# Configuration specific to your project.
-project:
-  apiId: 154sic93pxs0   # The API key of your project in the ROX Center server.
-  version: 1.2.3
-
-# Where the client should store its temporary files.
-# The client will work without it but it is required for some advanced features.
-workspace: tmp/rox
-
-# Client advanced features.
-payload:
-  
-  # Saves a copy of the test payload sent to the ROX Center server for debugging.
-  # The file will be saved in rspec/servers/<SERVER_NAME>/payload.json.
-  save: false
-
-  # If you track a large number of tests (more than a thousand), enabling this
-  # will reduce the size of the test payloads sent to ROX Center server by caching
-  # test information that doesn't change often such as the name.
-  cache: false
-
-  # Prints a copy of the test payload sent to the ROX Center server for debugging.
-  # Temporarily enable at runtime by setting the ROX_PRINT_PAYLOAD environment variable to 1.
-  print: false
-
-# The name of the ROX Center server to upload test results to.
-# This name must be one of the server names in the ~/.rox/config.yml file.
-# You can change this at runtime from the command line by setting the
-# ROX_SERVER environment variable.
-server: rox.example.com
-```
-
-Finally, you must enable the client in your spec helper file (usually `spec/spec_helper.rb`).
+You must then enable the client in your spec helper file (e.g. `spec/spec_helper.rb`).
 
 ```yml
 RoxClient::RSpec.configure do |config|

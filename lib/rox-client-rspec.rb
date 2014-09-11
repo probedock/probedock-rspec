@@ -4,7 +4,7 @@ require 'rspec'
 module RoxClient
 
   module RSpec
-    VERSION = '0.3.1'
+    VERSION = '0.4.0'
 
     class Error < StandardError; end
     class PayloadError < Error; end

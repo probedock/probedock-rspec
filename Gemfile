@@ -14,7 +14,6 @@ gem 'rake', '~> 10.1'
 group :development do
   gem 'bundler'
   gem 'jeweler'
-  gem 'geminabox'
   gem 'rake-version'
   gem 'simplecov'
   gem 'fakefs', require: 'fakefs/safe'
