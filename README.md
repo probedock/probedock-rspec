@@ -6,7 +6,7 @@
 
 ## Requirements
 
-* RSpec 3.1 (0.4.0+)
+* RSpec 3.1 (0.4+)
   * *RSpec 2.14 is supported up to version 0.3.1*
 
 ## Installation
@@ -14,7 +14,7 @@
 In your Gemfile:
 
 ```rb
-gem 'rox-client-rspec', '~> 0.4.0'
+gem 'rox-client-rspec', '~> 0.4.1'
 ```
 
 Manually:
