@@ -36,11 +36,11 @@ module RoxClient::RSpec
     end
 
     def example_passed example_notification
-      add_result example_notification.example, true
+      add_result example_notification, true
     end
 
     def example_failed example_notification
-      add_result example_notification.example, false
+      add_result example_notification, false
     end
 
     def stop notification
@@ -55,30 +55,26 @@ module RoxClient::RSpec
 
     private
 
-    def add_result example, successful
+    def add_result example_notification, successful
 
       options = {
         passed: successful,
         duration: ((Time.now - @current_time) * 1000).round
       }
-      options[:message] = failure_message(example) unless successful
 
-      @test_run.add_result example, @groups, options
+      options[:message] = failure_message example_notification unless successful
+
+      @test_run.add_result example_notification.example, @groups, options
     end
     
-    def failure_message example
-      exception = example.execution_result[:exception]
-      Array.new.tap do |a|
-        a << full_example_name(example)
-        a << "Failure/Error: #{read_failed_line(exception, example).strip}"
-        a << "  #{exception.class.name}:" unless exception.class.name =~ /RSpec/
-        exception.message.to_s.split("\n").each do |line|
-          a << "    #{line}"
-        end
-        format_backtrace(example.execution_result[:exception].backtrace, example).each do |backtrace_info|
-          a << "# #{backtrace_info}"
-        end
-      end.join "\n"
+    def failure_message example_notification
+      String.new.tap do |m|
+        m << example_notification.description
+        m << "\n"
+        m << example_notification.message_lines.collect{ |l| "  #{l}" }.join("\n")
+        m << "\n"
+        m << example_notification.formatted_backtrace.collect{ |l| "  # #{l}" }.join("\n")
+      end
     end
 
     def full_example_name example

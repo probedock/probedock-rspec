@@ -81,7 +81,7 @@ describe RoxClient::RSpec::Formatter do
       subject.example_passed double(example: ex)
     end
 
-    it "should add a failed result to the test run " do
+    it "should add a failed result to the test run" do
 
       error = runtime_error 'bug'
       ex = example_double 'should probably work', exception: error
@@ -90,23 +90,19 @@ describe RoxClient::RSpec::Formatter do
       allow(Time).to receive(:now).and_return(now)
       subject.example_started double(example: ex)
 
-      allow(subject).to receive(:read_failed_line).and_return('line 1')
-      allow(subject).to receive(:format_backtrace){ |backtrace,*args| backtrace }
-
       expected_message = Array.new.tap do |a|
-        a << "Group A Group B should probably work"
-        a << "Failure/Error: line 1"
-        a << "  RuntimeError:"
-        a << "    bug"
-        error.backtrace.each do |line|
-          a << "# #{line}"
-        end
+        a << "foo"
+        a << "  line1"
+        a << "  line2"
+        a << "  # a"
+        a << "  # b"
+        a << "  # c"
       end.join "\n"
 
       expect(run_double).to receive(:add_result).with(ex, example_groups, passed: false, duration: 2000, message: expected_message)
 
       allow(Time).to receive(:now).and_return(now + 2)
-      subject.example_failed double(example: ex)
+      subject.example_failed double(example: ex, description: 'foo', message_lines: %w(line1 line2), formatted_backtrace: %w(a b c))
     end
   end
 
