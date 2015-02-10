@@ -1,6 +1,6 @@
 require 'helper'
 
-describe RoxClient::RSpec::Server do
+describe ProbeDockRSpec::Server do
   let(:api_key_id){ '0123456789' }
   let(:api_key_secret){ 'abcdefghijklmnopqrstuvwxyz' }
   let(:options){ {
@@ -11,7 +11,7 @@ describe RoxClient::RSpec::Server do
     api_version: 42,
     project_api_id: '0000000000'
   } }
-  let(:server){ RoxClient::RSpec::Server.new options }
+  let(:server){ ProbeDockRSpec::Server.new options }
   subject{ server }
 
   it "should set its attributes" do
@@ -32,7 +32,7 @@ describe RoxClient::RSpec::Server do
     let(:http_responses){ [] }
 
     before :each do
-      ENV.delete_if{ |k,v| k.match(/\AROX_/) }
+      ENV.delete_if{ |k,v| k.match(/\APROBE_DOCK_/) }
       allow(HTTParty).to receive(:get){ http_responses.shift }
       allow(HTTParty).to receive(:post){ http_responses.shift }
     end
@@ -42,8 +42,8 @@ describe RoxClient::RSpec::Server do
       let(:api_root_response){ double code: 200, content_type: 'application/hal+json', body: api_root_body }
       let(:payload_response){ double code: 202 }
       let(:http_responses){ [ api_root_response, payload_response ] }
-      let(:authentication_headers){ { 'Authorization' => %|RoxApiKey id="#{api_key_id}" secret="#{api_key_secret}"| } }
-      let(:payload_headers){ { 'Content-Type' => 'application/vnd.lotaris.rox.payload.v1+json' } }
+      let(:authentication_headers){ { 'Authorization' => %|ProbeDockApiKey id="#{api_key_id}" secret="#{api_key_secret}"| } }
+      let(:payload_headers){ { 'Content-Type' => 'application/vnd.42inside.probe-dock.payload.v1+json' } }
 
       it "should not raise an error" do
         expect_upload.not_to raise_error
@@ -135,7 +135,7 @@ describe RoxClient::RSpec::Server do
 
   def raise_server_error *args
     options = args.last.kind_of?(Hash) ? args.pop : {}
-    raise_error RoxClient::RSpec::Server::Error do |err|
+    raise_error ProbeDockRSpec::Server::Error do |err|
       args.each{ |m| expect(err.message).to match(m) }
       expect(err.response).to options[:res] ? be(options[:res]) : be_nil
     end

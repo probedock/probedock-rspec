@@ -2,7 +2,7 @@ require 'paint'
 require 'fileutils'
 require 'rspec/core/formatters/base_formatter'
 
-module RoxClient::RSpec
+module ProbeDockRSpec
 
   class Formatter
 
@@ -11,7 +11,7 @@ module RoxClient::RSpec
 
     def initialize output
 
-      config = RoxClient::RSpec.config
+      config = ProbeDockRSpec.config
       @client = Client.new config.server, config.client_options
       @test_run = TestRun.new config.project
 

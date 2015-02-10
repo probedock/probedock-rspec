@@ -1,7 +1,7 @@
 require 'helper'
 
-describe RoxClient::RSpec::TestPayload do
-  TestPayload ||= RoxClient::RSpec::TestPayload
+describe ProbeDockRSpec::TestPayload do
+  TestPayload ||= ProbeDockRSpec::TestPayload
 
   let(:run_to_h){ { 'foo' => 'bar' } }
   let(:run_double){ double to_h: run_to_h }

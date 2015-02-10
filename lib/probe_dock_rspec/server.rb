@@ -1,12 +1,12 @@
 require 'oj'
 require 'httparty'
 
-module RoxClient::RSpec
+module ProbeDockRSpec
 
   class Server
     attr_reader :name, :api_url, :api_key_id, :api_key_secret, :api_version, :project_api_id
 
-    class Error < RoxClient::RSpec::Error
+    class Error < ProbeDockRSpec::Error
       attr_reader :response
     
       def initialize msg, response = nil
@@ -50,7 +50,7 @@ module RoxClient::RSpec
 
     def validate!
       
-      raise Error.new("Server #{@name} requires $ROX_RUNNER_KEY to be set (API v0)") if @api_version == 0 and !ENV['ROX_RUNNER_KEY']
+      raise Error.new("Server #{@name} requires $PROBE_DOCK_RUNNER_KEY to be set (API v0)") if @api_version == 0 and !ENV['PROBE_DOCK_RUNNER_KEY']
 
       required = { "apiUrl" => @api_url }
       required.merge!({ "apiKeyId" => @api_key_id, "apiKeySecret" => @api_key_secret, "projectApiId" => @project_api_id }) if @api_version >= 1
@@ -59,7 +59,7 @@ module RoxClient::RSpec
     end
 
     def payload_headers
-      { 'Content-Type' => 'application/vnd.lotaris.rox.payload.v1+json' }
+      { 'Content-Type' => 'application/vnd.42inside.probe-dock.payload.v1+json' }
     end
 
     def payload_uri
@@ -91,7 +91,7 @@ module RoxClient::RSpec
     end
 
     def authentication_headers
-      { 'Authorization' => %|RoxApiKey id="#{@api_key_id}" secret="#{@api_key_secret}"| }
+      { 'Authorization' => %|ProbeDockApiKey id="#{@api_key_id}" secret="#{@api_key_secret}"| }
     end
   end
 end

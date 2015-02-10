@@ -1,8 +1,8 @@
 require 'helper'
 
-describe RoxClient::RSpec::Cache do
+describe ProbeDockRSpec::Cache do
   include FakeFS::SpecHelpers
-  Cache ||= RoxClient::RSpec::Cache
+  Cache ||= ProbeDockRSpec::Cache
 
   TESTS = [
     {

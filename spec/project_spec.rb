@@ -1,8 +1,8 @@
 require 'helper'
 
-describe RoxClient::RSpec::Project do
-  Project ||= RoxClient::RSpec::Project
-  PayloadError ||= RoxClient::RSpec::PayloadError
+describe ProbeDockRSpec::Project do
+  Project ||= ProbeDockRSpec::Project
+  PayloadError ||= ProbeDockRSpec::PayloadError
 
   let(:project_options){ { name: 'A project', version: '1.2.3', api_id: 'abc', category: 'A category', tags: %w(a b c), tickets: %w(t1 t2) } }
   subject{ Project.new project_options }

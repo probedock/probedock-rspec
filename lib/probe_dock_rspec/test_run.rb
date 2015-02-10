@@ -1,5 +1,5 @@
 
-module RoxClient::RSpec
+module ProbeDockRSpec
 
   class TestRun
     # TODO: remove end time once API v0 is dead
@@ -37,7 +37,7 @@ module RoxClient::RSpec
       case options[:version]
       when 0
         {
-          'r' => ENV['ROX_RUNNER_KEY'],
+          'r' => ENV['PROBE_DOCK_RUNNER_KEY'],
           'e' => @end_time,
           'd' => @duration,
           'j' => @project.name,

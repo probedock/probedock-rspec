@@ -1,8 +1,8 @@
-# RSpec ROX Client
+# Probe Dock RSpec
 
-**RSpec client for [ROX Center](https://github.com/lotaris/rox-center).**
+**RSpec probe for [Probe Dock](https://github.com/42inside/probe-dock).**
 
-[![Gem Version](https://badge.fury.io/rb/rox-client-rspec.png)](http://badge.fury.io/rb/rox-client-rspec)
+[![Gem Version](https://badge.fury.io/rb/probe_dock_rspec.png)](http://badge.fury.io/rb/probe_dock_rspec)
 
 ## Requirements
 
@@ -14,50 +14,50 @@
 In your Gemfile:
 
 ```rb
-gem 'rox-client-rspec', '~> 0.4.1'
+gem 'probe_dock_rspec', '~> 0.4.1'
 ```
 
 Manually:
 
-    gem install rox-client-rspec
+    gem install probe_dock_rspec
 
 ## Usage
 
 If you haven't done it already, follow the [setup procedure](#setup) below.
 
-To track a test, you must assign it a ROX test key generated from your ROX Center server.
+To track a test, you must assign it a Probe Dock test key generated from your Probe Dock server.
 
 **NOTE: currently, all the tests in your test suite must be assigned a test key for the client to work.**
 
 Test keys are assigned to test using RSpec metadata:
 
 ```rb
-it "should work", rox: { key: 'abcdefghijkl' } do
+it "should work", probe_dock: { key: 'abcdefghijkl' } do
   expect(true).to be(true)
 end
 
-it(nil, rox: { key: 'bcdefghijklm' }){ should validate_presence_of(:name) }
+it(nil, probe_dock: { key: 'bcdefghijklm' }){ should validate_presence_of(:name) }
 ```
 
 <a name="setup"></a>
 ## Setup
 
 You must first set up the configuration file(s) for the project.
-This procedure is described in the [rox-client](https://github.com/lotaris/rox-client) repository:
+This procedure is described here:
 
-* [ROX Center Client Configuration](https://github.com/lotaris/rox-client#setup-procedure)
+* [Probe Setup Procedure](https://github.com/lotaris/rox-client#setup-procedure)
 
 You must then enable the client in your spec helper file (e.g. `spec/spec_helper.rb`).
 
 ```yml
-RoxClient::RSpec.configure do |config|
+ProbeDockRSpec.configure do |config|
 
-  # Optional ROX Center category to add to all the tests sent with this client.
+  # Optional category to add to all the tests sent with this client.
   config.project.category = 'RSpec'
 end
 ```
 
-The next time you run your test suite, the RSpec ROX Client will send the results to your ROX Center server.
+The next time you run your test suite, the RSpec probe will send the results to your Probe Dock server.
 
 ## Contributing
 
@@ -70,5 +70,5 @@ Please add a [changelog](CHANGELOG.md) entry with your name for new features and
 
 ## License
 
-The RSpec ROX Client is licensed under the [MIT License](http://opensource.org/licenses/MIT).
+Probe Dock RSpec is licensed under the [MIT License](http://opensource.org/licenses/MIT).
 See [LICENSE.txt](LICENSE.txt) for the full license.

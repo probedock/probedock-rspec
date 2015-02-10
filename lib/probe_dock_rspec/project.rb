@@ -1,5 +1,5 @@
 
-module RoxClient::RSpec
+module ProbeDockRSpec
 
   class Project
     # TODO: remove project name once API v0 is dead

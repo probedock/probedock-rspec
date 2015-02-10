@@ -1,9 +1,9 @@
 
-module RoxClient::RSpec
+module ProbeDockRSpec
 
   class Cache
 
-    class Error < RoxClient::RSpec::Error; end
+    class Error < ProbeDockRSpec::Error; end
 
     def initialize options = {}
       @tests = {}

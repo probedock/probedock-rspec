@@ -1,11 +1,11 @@
 require 'securerandom'
 
-module RoxClient::RSpec
+module ProbeDockRSpec
 
   class UID
-    ENVIRONMENT_VARIABLE = 'ROX_TEST_RUN_UID'
+    ENVIRONMENT_VARIABLE = 'PROBE_DOCK_TEST_RUN_UID'
 
-    class Error < RoxClient::RSpec::Error; end
+    class Error < ProbeDockRSpec::Error; end
 
     def initialize options = {}
       @workspace = options[:workspace]
@@ -25,7 +25,7 @@ module RoxClient::RSpec
     end
 
     def generate_uid_to_env
-      raise Error.new("$ROX_TEST_RUN_UID is already defined") if env_var
+      raise Error.new("$PROBE_DOCK_TEST_RUN_UID is already defined") if env_var
       ENV[ENVIRONMENT_VARIABLE] = generate_uid
     end
 

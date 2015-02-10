@@ -1,9 +1,9 @@
 require 'helper'
 
-describe RoxClient::RSpec::Formatter do
-  Client ||= RoxClient::RSpec::Client
-  TestRun ||= RoxClient::RSpec::TestRun
-  Formatter ||= RoxClient::RSpec::Formatter
+describe ProbeDockRSpec::Formatter do
+  Client ||= ProbeDockRSpec::Client
+  TestRun ||= ProbeDockRSpec::TestRun
+  Formatter ||= ProbeDockRSpec::Formatter
 
   let(:server_double){ double }
   let(:client_options){ { publish: true } }
@@ -14,7 +14,7 @@ describe RoxClient::RSpec::Formatter do
   subject{ new_formatter }
 
   before :each do
-    allow(RoxClient::RSpec).to receive(:config).and_return(config_double)
+    allow(ProbeDockRSpec).to receive(:config).and_return(config_double)
     allow(Client).to receive(:new).and_return(client_double)
     allow(TestRun).to receive(:new).and_return(run_double)
   end
@@ -111,8 +111,8 @@ describe RoxClient::RSpec::Formatter do
   end
 
   def group_double desc, options = {}
-    rox_metadata = { rox: options.delete(:metadata) || {} }
-    double options.merge(description: desc, metadata: rox_metadata)
+    probe_dock_metadata = { probe_dock: options.delete(:metadata) || {} }
+    double options.merge(description: desc, metadata: probe_dock_metadata)
   end
 
   def example_double desc, options = {}

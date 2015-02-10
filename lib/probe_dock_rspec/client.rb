@@ -1,5 +1,5 @@
 
-module RoxClient::RSpec
+module ProbeDockRSpec
 
   class Client
 
@@ -30,7 +30,7 @@ module RoxClient::RSpec
       return false unless payload = build_payload(test_run, payload_options)
 
       published = if !@publish
-        puts Paint["ROX - Publishing disabled", :yellow]
+        puts Paint["Probe Dock - Publishing disabled", :yellow]
         false
       elsif publish_payload payload
         @cache.save test_run if cache_enabled
@@ -59,7 +59,7 @@ module RoxClient::RSpec
 
     def fail msg, type = :error
       styles = { warning: [ :yellow ], error: [ :bold, :red ] }
-      warn Paint["ROX - #{msg}", *styles[type]]
+      warn Paint["Probe Dock - #{msg}", *styles[type]]
       false
     end
 
@@ -67,13 +67,13 @@ module RoxClient::RSpec
       begin
         @cache.load
       rescue Cache::Error => e
-        warn Paint["ROX - #{e.message}", :yellow]
+        warn Paint["Probe Dock - #{e.message}", :yellow]
         false
       end
     end
 
     def print_payload payload
-      puts Paint['ROX - Printing payload...', :yellow]
+      puts Paint['Probe Dock - Printing payload...', :yellow]
       begin
         puts JSON.pretty_generate(payload)
       rescue
@@ -96,21 +96,21 @@ module RoxClient::RSpec
 
     def publish_payload payload
 
-      puts Paint["ROX - Sending payload to #{@server.api_url}...", :magenta]
+      puts Paint["Probe Dock - Sending payload to #{@server.api_url}...", :magenta]
 
       begin
         if @local_mode
-          puts Paint['ROX - LOCAL MODE: not actually sending payload.', :yellow]
+          puts Paint['Probe Dock - LOCAL MODE: not actually sending payload.', :yellow]
         else
           @server.upload payload
         end
-        puts Paint["ROX - Done!", :green]
+        puts Paint["Probe Dock - Done!", :green]
         true
       rescue Server::Error => e
-        warn Paint["ROX - Upload failed!", :red, :bold]
-        warn Paint["ROX - #{e.message}", :red, :bold]
+        warn Paint["Probe Dock - Upload failed!", :red, :bold]
+        warn Paint["Probe Dock - #{e.message}", :red, :bold]
         if e.response
-          warn Paint["ROX - Dumping response body...", :red, :bold]
+          warn Paint["Probe Dock - Dumping response body...", :red, :bold]
           warn e.response.body
         end
         false

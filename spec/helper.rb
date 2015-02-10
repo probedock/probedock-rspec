@@ -19,4 +19,4 @@ require 'fakefs/spec_helpers'
 
 Dir[File.join(File.dirname(__FILE__), 'support/**/*.rb')].each{ |f| require f }
 
-require 'rox-client-rspec'
+require 'probe_dock_rspec'

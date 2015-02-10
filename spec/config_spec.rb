@@ -1,13 +1,13 @@
 require 'helper'
 require 'fileutils'
 
-describe RoxClient::RSpec::Config do
+describe ProbeDockRSpec::Config do
   include Capture::Helpers
   include FakeFS::SpecHelpers
-  Server ||= RoxClient::RSpec::Server
-  Project ||= RoxClient::RSpec::Project
+  Server ||= ProbeDockRSpec::Server
+  Project ||= ProbeDockRSpec::Project
 
-  let(:config){ RoxClient::RSpec::Config.new }
+  let(:config){ ProbeDockRSpec::Config.new }
   let(:rspec_config){ double add_formatter: nil }
   let(:project_double){ double update: nil }
   let(:server_doubles){ [] }
@@ -20,49 +20,49 @@ describe RoxClient::RSpec::Config do
 
   describe ".config" do
     let(:new_config){ double load: nil }
-    before(:each){ allow(RoxClient::RSpec::Config).to receive(:new).and_return(new_config) }
+    before(:each){ allow(ProbeDockRSpec::Config).to receive(:new).and_return(new_config) }
     
     it "should create, load and memoize a configuration" do
       expect(new_config).to receive(:load).once
-      3.times{ expect(RoxClient::RSpec.config).to be(new_config) }
+      3.times{ expect(ProbeDockRSpec.config).to be(new_config) }
     end
   end
 
   describe ".configure" do
     let(:load_warnings){ [] }
     let(:config){ double load: nil, setup!: nil, load_warnings: load_warnings }
-    before(:each){ allow(RoxClient::RSpec).to receive(:config).and_return(config) }
+    before(:each){ allow(ProbeDockRSpec).to receive(:config).and_return(config) }
 
     it "should yield and return the configuration" do
       result = nil
-      expect{ |b| result = RoxClient::RSpec.configure &b }.to yield_with_args(config)
+      expect{ |b| result = ProbeDockRSpec.configure &b }.to yield_with_args(config)
       expect(result).to be(config)
     end
 
     it "should set up the configuration" do
       expect(config).to receive(:setup!)
-      RoxClient::RSpec.configure
+      ProbeDockRSpec.configure
     end
 
     it "should not set up if disabled" do
       expect(config).not_to receive(:setup!)
-      RoxClient::RSpec.configure setup: false
+      ProbeDockRSpec.configure setup: false
     end
 
     describe "with load warnings" do
       let(:load_warnings){ [ 'a', 'b' ] }
 
       it "should print load warnings" do
-        c = capture{ RoxClient::RSpec.configure }
+        c = capture{ ProbeDockRSpec.configure }
         expect(c.stdout).to be_empty
-        expect(c.stderr).to match('ROX - a')
-        expect(c.stderr).to match('ROX - b')
+        expect(c.stderr).to match('Probe Dock - a')
+        expect(c.stderr).to match('Probe Dock - b')
       end
     end
   end
 
   describe "when created" do
-    subject{ RoxClient::RSpec::Config }
+    subject{ ProbeDockRSpec::Config }
 
     it "should create a project" do
       expect(Project).to receive(:new)
@@ -72,11 +72,11 @@ describe RoxClient::RSpec::Config do
 
   before :each do
     allow(RSpec).to receive(:configure).and_yield(rspec_config)
-    @rox_env_vars = ENV.select{ |k,v| k.match /\AROX_/ }.each_key{ |k| ENV.delete k }
+    @probe_dock_env_vars = ENV.select{ |k,v| k.match /\APROBE_DOCK_/ }.each_key{ |k| ENV.delete k }
   end
 
   after :each do
-    @rox_env_vars.each_pair{ |k,v| ENV[k] = v }
+    @probe_dock_env_vars.each_pair{ |k,v| ENV[k] = v }
   end
 
   describe "default attributes" do
@@ -97,15 +97,15 @@ describe RoxClient::RSpec::Config do
   end
 
   it "should add the formatter to RSpec" do
-    expect(rspec_config).to receive(:add_formatter).with(RoxClient::RSpec::Formatter)
+    expect(rspec_config).to receive(:add_formatter).with(ProbeDockRSpec::Formatter)
     subject.setup!
   end
 
   describe "when loaded" do
     let(:home_config){ nil }
-    let(:home_config_path){ File.expand_path('~/.rox/config.yml') }
+    let(:home_config_path){ File.expand_path('~/.probe-dock/config.yml') }
     let(:working_config){ nil }
-    let(:working_config_path){ '/project/rox.yml' }
+    let(:working_config_path){ '/project/probe-dock.yml' }
     let(:loaded_config){ config.tap &:load }
 
     before :each do
@@ -283,7 +283,7 @@ payload:
         end
 
         describe "with overriding environment variables" do
-          let :rox_env_vars do
+          let :probe_dock_env_vars do
             {
               publish: '0',
               local: '1',
@@ -293,7 +293,7 @@ payload:
               print_payload: '1'
             }
           end
-          before(:each){ rox_env_vars.each_pair{ |k,v| ENV["ROX_#{k.upcase}"] = v } }
+          before(:each){ probe_dock_env_vars.each_pair{ |k,v| ENV["PROBE_DOCK_#{k.upcase}"] = v } }
 
           it "should have no load warnings" do
             expect(subject.load_warnings).to be_empty
@@ -345,9 +345,9 @@ workspace: /tmp
 
         it_should_behave_like "an overriden config"
 
-        describe "with $ROX_CONFIG overriding the working file path" do
-          let(:working_config_path){ '/tmp/foo/rox.yml' }
-          before(:each){ ENV['ROX_CONFIG'] = '/tmp/foo/rox.yml' }
+        describe "with $PROBE_DOCK_CONFIG overriding the working file path" do
+          let(:working_config_path){ '/tmp/foo/probe-dock.yml' }
+          before(:each){ ENV['PROBE_DOCK_CONFIG'] = '/tmp/foo/probe-dock.yml' }
           it_should_behave_like "an overriden config"
         end
       end

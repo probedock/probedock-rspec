@@ -1,9 +1,9 @@
 require 'helper'
 
-describe RoxClient::RSpec::UID do
+describe ProbeDockRSpec::UID do
   include FakeFS::SpecHelpers
-  UID ||= RoxClient::RSpec::UID
-  ENVIRONMENT_VARIABLE = 'ROX_TEST_RUN_UID'
+  UID ||= ProbeDockRSpec::UID
+  ENVIRONMENT_VARIABLE = 'PROBE_DOCK_TEST_RUN_UID'
   UID_REGEXP = /\d{14}\-[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}/
 
   let(:workspace){ '/tmp' }
@@ -11,11 +11,11 @@ describe RoxClient::RSpec::UID do
   subject{ UID.new uid_options }
 
   before :each do
-    @rox_env_vars = ENV.select{ |k,v| k.match /\AROX_/ }.each_key{ |k| ENV.delete k }
+    @probe_dock_env_vars = ENV.select{ |k,v| k.match /\APROBE_DOCK_/ }.each_key{ |k| ENV.delete k }
   end
 
   after :each do
-    @rox_env_vars.each_pair{ |k,v| ENV[k] = v }
+    @probe_dock_env_vars.each_pair{ |k,v| ENV[k] = v }
   end
 
   describe "#load_uid" do
@@ -82,7 +82,7 @@ describe RoxClient::RSpec::UID do
       end
 
       it "should raise an error" do
-        expect{ subject.generate_uid_to_env }.to raise_error(UID::Error, /\$ROX_TEST_RUN_UID is already defined/)
+        expect{ subject.generate_uid_to_env }.to raise_error(UID::Error, /\$PROBE_DOCK_TEST_RUN_UID is already defined/)
       end
     end
   end

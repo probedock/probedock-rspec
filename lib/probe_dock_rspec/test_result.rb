@@ -1,5 +1,5 @@
 
-module RoxClient::RSpec
+module ProbeDockRSpec
 
   class TestResult
     attr_reader :key, :name, :category, :tags, :tickets, :data, :duration, :message
@@ -64,7 +64,7 @@ module RoxClient::RSpec
     end
 
     def self.meta holder
-      meta = holder.metadata[:rox] || {}
+      meta = holder.metadata[:probe_dock] || {}
       if meta.kind_of? String
         { key: meta }
       elsif meta.kind_of? Hash

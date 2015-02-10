@@ -1,10 +1,10 @@
 require 'helper'
 
-describe RoxClient::RSpec::TestRun do
-  TestRun ||= RoxClient::RSpec::TestRun
-  TestResult ||= RoxClient::RSpec::TestResult
-  TestPayload ||= RoxClient::RSpec::TestPayload
-  PayloadError ||= RoxClient::RSpec::PayloadError
+describe ProbeDockRSpec::TestRun do
+  TestRun ||= ProbeDockRSpec::TestRun
+  TestResult ||= ProbeDockRSpec::TestResult
+  TestPayload ||= ProbeDockRSpec::TestPayload
+  PayloadError ||= ProbeDockRSpec::PayloadError
 
   let(:project_options){ { name: 'A project', version: '1.2.3', api_id: 'abc', category: 'A category', tags: %w(a b), tickets: %w(t1 t2) } }
   let(:project_double){ double project_options.merge(:validate! => nil) }

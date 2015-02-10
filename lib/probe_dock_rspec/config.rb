@@ -1,7 +1,7 @@
 require 'yaml'
 
-# Utilities to send test results to ROX Center.
-module RoxClient::RSpec
+# Utilities to send test results to Probe Dock.
+module ProbeDockRSpec
 
   def self.config
     @config ||= Config.new.tap(&:load)
@@ -9,14 +9,14 @@ module RoxClient::RSpec
 
   def self.configure options = {}
     yield config if block_given?
-    config.load_warnings.each{ |w| warn Paint["ROX - #{w}", :yellow] }
+    config.load_warnings.each{ |w| warn Paint["Probe Dock - #{w}", :yellow] }
     config.setup! if options[:setup] != false
     config
   end
 
   class Config
     # TODO: add silent/verbose option(s)
-    class Error < RoxClient::RSpec::Error; end
+    class Error < ProbeDockRSpec::Error; end
     attr_writer :publish, :local_mode, :cache_payload, :print_payload, :save_payload
     attr_reader :project, :server, :workspace, :load_warnings
 
@@ -35,7 +35,7 @@ module RoxClient::RSpec
       @servers.dup
     end
 
-    # Plugs ROX utilities into RSpec.
+    # Plugs Probe Dock utilities into RSpec.
     def setup!
       ::RSpec.configure do |c|
         c.add_formatter Formatter
@@ -132,11 +132,11 @@ module RoxClient::RSpec
     end
 
     def home_config_file
-      File.join File.expand_path('~'), '.rox', 'config.yml'
+      File.join File.expand_path('~'), '.probe-dock', 'config.yml'
     end
 
     def working_config_file
-      File.expand_path ENV['ROX_CONFIG'] || 'rox.yml', Dir.pwd
+      File.expand_path ENV['PROBE_DOCK_CONFIG'] || 'probe-dock.yml', Dir.pwd
     end
 
     def parse_env_flag name, default = false
@@ -145,7 +145,7 @@ module RoxClient::RSpec
     end
 
     def parse_env_option name
-      var = "ROX_#{name.upcase}"
+      var = "PROBE_DOCK_#{name.upcase}"
       ENV.key?(var) ? ENV[var] : nil
     end
 

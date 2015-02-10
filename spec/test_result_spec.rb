@@ -1,13 +1,13 @@
 require 'helper'
 
-describe RoxClient::RSpec::TestResult do
+describe ProbeDockRSpec::TestResult do
   let(:project_options){ { category: 'A category', tags: %w(a b), tickets: %w(t1 t2) } }
   let(:project_double){ double project_options }
   let(:example_metadata){ { key: '123' } }
-  let(:example_double){ double description: 'should work', metadata: { rox: example_metadata } }
+  let(:example_double){ double description: 'should work', metadata: { probe_dock: example_metadata } }
   let(:group_doubles){ [ group_double('Something') ] }
   let(:result_options){ { passed: true, duration: 42 } }
-  let(:result){ RoxClient::RSpec::TestResult.new project_double, example_double, group_doubles, result_options }
+  let(:result){ ProbeDockRSpec::TestResult.new project_double, example_double, group_doubles, result_options }
   subject{ result }
 
   it "should use the example key" do
@@ -205,23 +205,23 @@ describe RoxClient::RSpec::TestResult do
   end
 
   describe ".meta" do
-    subject{ RoxClient::RSpec::TestResult }
+    subject{ ProbeDockRSpec::TestResult }
 
-    it "should extract rox metadata" do
-      expect(subject.meta(double(metadata: { rox: { foo: 'bar' } }))).to eq(foo: 'bar')
+    it "should extract probe dock metadata" do
+      expect(subject.meta(double(metadata: { probe_dock: { foo: 'bar' } }))).to eq(foo: 'bar')
     end
 
-    it "should extract rox metadata when the key replaces the options" do
-      expect(subject.meta(double(metadata: { rox: 'foo' }))).to eq(key: 'foo')
+    it "should extract probe dock metadata when the key replaces the options" do
+      expect(subject.meta(double(metadata: { probe_dock: 'foo' }))).to eq(key: 'foo')
     end
 
-    it "should not raise an error if there is no rox metadata" do
+    it "should not raise an error if there is no probe dock metadata" do
       expect(subject.meta(double(metadata: {}))).to eq({})
     end
   end
 
   describe ".extract_key" do
-    subject{ RoxClient::RSpec::TestResult }
+    subject{ ProbeDockRSpec::TestResult }
 
     it "should return nil when there is no key" do
       example = double metadata: {}
@@ -230,12 +230,12 @@ describe RoxClient::RSpec::TestResult do
     end
 
     it "should extract the example key" do
-      example = double metadata: { rox: { key: 'abc' } }
+      example = double metadata: { probe_dock: { key: 'abc' } }
       expect(subject.extract_key(example, [])).to eq('abc')
     end
 
     it "should extract the example key when it replaces the options" do
-      example = double metadata: { rox: 'abc' }
+      example = double metadata: { probe_dock: 'abc' }
       expect(subject.extract_key(example, [])).to eq('abc')
     end
 
@@ -252,17 +252,17 @@ describe RoxClient::RSpec::TestResult do
     end
 
     it "should override group keys with the example key" do
-      example = double metadata: { rox: { key: 'abc' } }
+      example = double metadata: { probe_dock: { key: 'abc' } }
       groups = [ group_double('a', key: 'bcd'), group_double('b', key: 'cde') ]
       expect(subject.extract_key(example, groups)).to eq('abc')
     end
   end
 
   describe ".extract_grouped" do
-    subject{ RoxClient::RSpec::TestResult }
+    subject{ ProbeDockRSpec::TestResult }
 
     it "should not indicate a normal example as grouped" do
-      example = double metadata: { rox: { key: 'abc' } }
+      example = double metadata: { probe_dock: { key: 'abc' } }
       groups = [ group_double('a'), group_double('b') ]
       expect(subject.extract_grouped(example, groups)).to be(false)
     end
@@ -275,6 +275,6 @@ describe RoxClient::RSpec::TestResult do
   end
 
   def group_double desc, metadata = {}
-    double description: desc, metadata: { rox: metadata }
+    double description: desc, metadata: { probe_dock: metadata }
   end
 end

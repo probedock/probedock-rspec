@@ -1,7 +1,7 @@
 require 'helper'
 require 'json'
 
-describe RoxClient::RSpec::Client do
+describe ProbeDockRSpec::Client do
   include Capture::Helpers
   include FakeFS::SpecHelpers
 
@@ -30,36 +30,36 @@ describe RoxClient::RSpec::Client do
   let(:server_options){ { name: 'A server', api_url: API_URL, project_api_id: '0123456789', payload_options: {}, upload: nil } }
   let(:server){ double server_options }
   let(:client_options){ { publish: true, workspace: WORKSPACE } }
-  let(:client){ RoxClient::RSpec::Client.new server, client_options }
+  let(:client){ ProbeDockRSpec::Client.new server, client_options }
   subject{ client }
 
   before :each do
-    allow(RoxClient::RSpec::Cache).to receive(:new).and_return(cache_double)
-    allow(RoxClient::RSpec::TestPayload).to receive(:new).and_return(payload_double)
-    allow(RoxClient::RSpec::UID).to receive(:new).and_return(uid_double)
+    allow(ProbeDockRSpec::Cache).to receive(:new).and_return(cache_double)
+    allow(ProbeDockRSpec::TestPayload).to receive(:new).and_return(payload_double)
+    allow(ProbeDockRSpec::UID).to receive(:new).and_return(uid_double)
   end
 
   describe "when created" do
-    subject{ RoxClient::RSpec::Client }
+    subject{ ProbeDockRSpec::Client }
 
     it "should create a cache manager" do
-      expect(RoxClient::RSpec::Cache).to receive(:new).with(workspace: WORKSPACE, server_name: server_options[:name], project_api_id: server_options[:project_api_id])
-      RoxClient::RSpec::Client.new server, client_options
+      expect(ProbeDockRSpec::Cache).to receive(:new).with(workspace: WORKSPACE, server_name: server_options[:name], project_api_id: server_options[:project_api_id])
+      ProbeDockRSpec::Client.new server, client_options
     end
 
     it "should not raise an error if the server is missing" do
-      expect(RoxClient::RSpec::Cache).to receive(:new).with(workspace: WORKSPACE)
-      expect{ RoxClient::RSpec::Client.new nil, client_options }.not_to raise_error
+      expect(ProbeDockRSpec::Cache).to receive(:new).with(workspace: WORKSPACE)
+      expect{ ProbeDockRSpec::Client.new nil, client_options }.not_to raise_error
     end
 
     it "should create an uid manager" do
-      expect(RoxClient::RSpec::UID).to receive(:new).with(workspace: WORKSPACE)
-      RoxClient::RSpec::Client.new server, client_options
+      expect(ProbeDockRSpec::UID).to receive(:new).with(workspace: WORKSPACE)
+      ProbeDockRSpec::Client.new server, client_options
     end
   end
 
   it "should upload the results payload" do
-    expect(RoxClient::RSpec::TestPayload).to receive(:new).with(run_double)
+    expect(ProbeDockRSpec::TestPayload).to receive(:new).with(run_double)
     expect(payload_double).to receive(:to_h).with({})
     expect_processed true, SENDING_PAYLOAD_MSG, API_URL, DONE_MSG
   end
@@ -85,7 +85,7 @@ describe RoxClient::RSpec::Client do
   end
 
   describe "when the payload cannot be serialized" do
-    before(:each){ allow(payload_double).to receive(:to_h).and_raise(RoxClient::RSpec::PayloadError.new('bug')) }
+    before(:each){ allow(payload_double).to receive(:to_h).and_raise(ProbeDockRSpec::PayloadError.new('bug')) }
     it "should output the error to stderr" do
       expect_processed false, stderr: [ 'bug' ]
     end
@@ -101,14 +101,14 @@ describe RoxClient::RSpec::Client do
 
   describe "when publishing fails due to a configuration error" do
     it "should output the error message to stderr" do
-      allow(server).to receive(:upload).and_raise(RoxClient::RSpec::Server::Error.new("bug"))
+      allow(server).to receive(:upload).and_raise(ProbeDockRSpec::Server::Error.new("bug"))
       expect_processed false, SENDING_PAYLOAD_MSG, API_URL, stderr: [ UPLOAD_FAILED_MSG, 'bug' ]
     end
   end
 
   describe "when publishing fails due to a server error" do
     it "should output the error message and response body to stderr" do
-      allow(server).to receive(:upload).and_raise(RoxClient::RSpec::Server::Error.new("bug", double(body: 'fubar')))
+      allow(server).to receive(:upload).and_raise(ProbeDockRSpec::Server::Error.new("bug", double(body: 'fubar')))
       expect_processed false, SENDING_PAYLOAD_MSG, API_URL, stderr: [ UPLOAD_FAILED_MSG, 'bug', DUMPING_RESPONSE_MSG, 'fubar' ]
     end
   end
@@ -127,13 +127,13 @@ describe RoxClient::RSpec::Client do
     end
 
     it "should output any error to stderr and not save the cache" do
-      allow(cache_double).to receive(:load).and_raise(RoxClient::RSpec::Cache::Error.new('bug'))
+      allow(cache_double).to receive(:load).and_raise(ProbeDockRSpec::Cache::Error.new('bug'))
       expect(cache_double).not_to receive(:save)
       expect_processed true, SENDING_PAYLOAD_MSG, API_URL, DONE_MSG, stderr: [ 'bug' ]
     end
 
     it "should not save the cache if publishing fails" do
-      allow(server).to receive(:upload).and_raise(RoxClient::RSpec::Server::Error.new("bug"))
+      allow(server).to receive(:upload).and_raise(ProbeDockRSpec::Server::Error.new("bug"))
       expect(cache_double).to receive(:load)
       expect(cache_double).not_to receive(:save)
       expect_processed false, SENDING_PAYLOAD_MSG, API_URL, stderr: [ UPLOAD_FAILED_MSG, 'bug' ]

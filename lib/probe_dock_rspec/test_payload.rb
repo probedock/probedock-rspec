@@ -1,11 +1,11 @@
 require 'fileutils'
 require 'digest/sha2'
 
-module RoxClient::RSpec
+module ProbeDockRSpec
 
   class TestPayload
 
-    class Error < RoxClient::RSpec::Error; end
+    class Error < ProbeDockRSpec::Error; end
 
     def initialize run
       @run = run
