@@ -14,7 +14,7 @@ module ProbeDockRSpec
       validate!
 
       @tests = { @project_api_id => @tests[@project_api_id] || {} }
-      test_run.results.each{ |r| @tests[@project_api_id][r.key] = test_result_hash(r) }
+      test_run.results.select(&:key).each{ |r| @tests[@project_api_id][r.key] = test_result_hash(r) }
 
       FileUtils.mkdir_p File.dirname(cache_file)
       File.open(cache_file, 'w'){ |f| f.write Oj.dump(@tests, mode: :strict) }
@@ -30,11 +30,12 @@ module ProbeDockRSpec
       else
         {}
       end
+
       self
     end
 
     def known? test_result
-      !!@tests[@project_api_id] && !!@tests[@project_api_id][test_result.key]
+      test_result.key && !!@tests[@project_api_id] && !!@tests[@project_api_id][test_result.key]
     end
 
     def stale? test_result

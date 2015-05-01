@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
     "lib/probe_dock_rspec/test_run.rb",
     "lib/probe_dock_rspec/uid.rb"
   ]
-  s.homepage = "https://github.com/42inside/probe-dock-rspec"
+  s.homepage = "https://github.com/probe-dock/probe-dock-rspec"
   s.licenses = ["MIT"]
   s.rubygems_version = "2.4.5"
   s.summary = "RSpec probe to send test results to Probe Dock."

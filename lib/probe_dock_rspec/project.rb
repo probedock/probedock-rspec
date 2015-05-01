@@ -2,15 +2,14 @@
 module ProbeDockRSpec
 
   class Project
-    # TODO: remove project name once API v0 is dead
-    attr_accessor :name, :version, :api_id, :category, :tags, :tickets
+    attr_accessor :version, :api_id, :category, :tags, :tickets
 
     def initialize options = {}
       update options
     end
 
     def update options = {}
-      %w(name version api_id category).each do |k|
+      %w(version api_id category).each do |k|
         instance_variable_set "@#{k}", options[k.to_sym] ? options[k.to_sym].to_s : nil if options.key? k.to_sym
       end
       @tags = wrap(options[:tags]).compact if options.key? :tags
@@ -18,7 +17,7 @@ module ProbeDockRSpec
     end
 
     def validate!
-      required = { "name" => @name, "version" => @version, "API identifier" => @api_id }
+      required = { "version" => @version, "API identifier" => @api_id }
       missing = required.inject([]){ |memo,(k,v)| v.to_s.strip.length <= 0 ? memo << k : memo }
       raise PayloadError.new("Missing project options: #{missing.join ', '}") if missing.any?
     end

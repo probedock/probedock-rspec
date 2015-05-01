@@ -34,31 +34,14 @@ module ProbeDockRSpec
     def to_h options = {}
       validate!
 
-      case options[:version]
-      when 0
-        {
-          'r' => ENV['PROBE_DOCK_RUNNER_KEY'],
-          'e' => @end_time,
-          'd' => @duration,
-          'j' => @project.name,
-          'v' => @project.version,
-          't' => @results.collect{ |r| r.to_h options }
-        }.tap do |h|
-          h['u'] = @uid if @uid
-        end
-      else # version 1 by default
-        {
-          'd' => @duration,
-          'r' => [
-            {
-              'j' => @project.api_id,
-              'v' => @project.version,
-              't' => @results.collect{ |r| r.to_h options }
-            }
-          ]
-        }.tap do |h|
-          h['u'] = @uid if @uid
-        end
+      {
+        'p' => @project.api_id,
+        'v' => @project.version,
+        'd' => @duration,
+        'r' => @results.collect{ |r| r.to_h options }
+      }.tap do |h|
+        # FIXME: use new reports
+        h['u'] = @uid if @uid
       end
     end
 
@@ -70,8 +53,9 @@ module ProbeDockRSpec
       raise PayloadError.new("Missing project") if !@project
       @project.validate!
 
-      validate_no_results_without_key
-      validate_no_duplicate_keys
+      # FIXME: log warnings
+      #validate_no_results_without_key
+      #validate_no_duplicate_keys
     end
 
     def validate_no_duplicate_keys
