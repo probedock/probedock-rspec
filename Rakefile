@@ -14,7 +14,7 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "probe_dock_rspec"
+  gem.name = "probe-dock-rspec"
   gem.homepage = "https://github.com/42inside/probe-dock-rspec"
   gem.license = "MIT"
   gem.summary = %Q{RSpec probe to send test results to Probe Dock.}

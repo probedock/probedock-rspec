@@ -2,7 +2,7 @@
 
 **RSpec probe for [Probe Dock](https://github.com/42inside/probe-dock).**
 
-[![Gem Version](https://badge.fury.io/rb/probe_dock_rspec.png)](http://badge.fury.io/rb/probe_dock_rspec)
+[![Gem Version](https://badge.fury.io/rb/probe-dock-rspec.png)](http://badge.fury.io/rb/probe-dock-rspec)
 
 ## Requirements
 
@@ -14,12 +14,12 @@
 In your Gemfile:
 
 ```rb
-gem 'probe_dock_rspec', '~> 0.4.1'
+gem 'probe-dock-rspec', '~> 0.4.1'
 ```
 
 Manually:
 
-    gem install probe_dock_rspec
+    gem install probe-dock-rspec
 
 ## Usage
 
