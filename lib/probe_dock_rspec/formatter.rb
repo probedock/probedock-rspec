@@ -45,7 +45,6 @@ module ProbeDockRSpec
 
     def stop notification
       end_time = Time.now
-      @test_run.end_time = end_time.to_i * 1000
       @test_run.duration = ((end_time - @start_time) * 1000).round
     end
 

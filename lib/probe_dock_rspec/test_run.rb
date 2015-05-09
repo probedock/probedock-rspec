@@ -11,7 +11,6 @@ module ProbeDockRSpec
     end
 
     def add_result example, groups = [], options = {}
-
       if TestResult.extract_grouped(example, groups) and (existing_result = @results.find{ |r| r.grouped? && r.key == TestResult.extract_key(example, groups) })
         existing_result.update options
       else
