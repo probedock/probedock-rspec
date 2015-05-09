@@ -14,8 +14,8 @@ describe ProbeDockRSpec::TestRun do
     expect(subject.project).to be(project_double)
   end
 
-  it "should have no end time, duration or uid" do
-    expect(subject_attrs(:end_time, :duration, :uid)).to eq(end_time: nil, duration: nil, uid: nil)
+  it "should have no duration or uid" do
+    expect(subject_attrs(:duration, :uid)).to eq(duration: nil, uid: nil)
   end
 
   it "should have no results" do
@@ -107,7 +107,7 @@ describe ProbeDockRSpec::TestRun do
 
       describe "with a missing project" do
         let(:project_double){ nil }
-        
+
         it "should raise an error indicating that the project is missing" do
           expect{ subject.to_h }.to raise_payload_error(/missing project/i)
         end
@@ -124,22 +124,30 @@ describe ProbeDockRSpec::TestRun do
       describe "with results that are missing a key" do
         let(:result_doubles){ [ double(key: 'a', to_h: 1), double(key: nil, name: 'abcd', to_h: 2), double(key: '  ', name: 'bcde', to_h: 3) ] }
 
-        it "should raise an error indicating the invalid results" do
-          expect{ subject.to_h }.to raise_payload_error(/missing a key/i, 'abcd', 'bcde')
+        it "should not raise an error" do
+          expect{ subject.to_h }.not_to raise_error
+        end
+
+        xit "should return warnings" do
+          # not yet implemented
         end
       end
 
       describe "with results that have duplicate keys" do
         let :result_doubles do
           [
-            double(key: '1', name: 'abcd'), double(key: '1', name: 'bcde'),
-            double(key: '2'),
-            double(key: '3', name: 'cdef'), double(key: '3', name: 'defg'), double(key: '3', name: 'efgh')
+            double(key: '1', name: 'abcd', to_h: 1), double(key: '1', name: 'bcde', to_h: 2),
+            double(key: '2', to_h: 3),
+            double(key: '3', name: 'cdef', to_h: 4), double(key: '3', name: 'defg', to_h: 5), double(key: '3', name: 'efgh', to_h: 6)
           ]
         end
 
-        it "should raise an error indicating the invalid results" do
-          expect{ subject.to_h }.to raise_payload_error(/multiple test results/i, '- 1', '- 3', 'abcd', 'bcde', 'cdef', 'defg', 'efgh')
+        it "should not raise an error" do
+          expect{ subject.to_h }.not_to raise_error
+        end
+
+        xit "should return warnings" do
+          # not yet implemented
         end
       end
 
@@ -150,14 +158,10 @@ describe ProbeDockRSpec::TestRun do
 
         let :expected_result do
           {
-            'd' => 42,
-            'r' => [
-              {
-                'j' => 'abc',
-                'v' => '1.2.3',
-                't' => [ 1, 2, 3 ]
-              }
-            ]
+            'projectId' => 'abc',
+            'version' => '1.2.3',
+            'duration' => 42,
+            'results' => [ 1, 2, 3 ]
           }
         end
 
@@ -170,7 +174,7 @@ describe ProbeDockRSpec::TestRun do
           let(:run_attributes){ super().merge uid: '123' }
 
           it "should serialize the run data with the uid" do
-            expect(subject).to eq(expected_result.merge 'u' => '123')
+            expect(subject).to eq(expected_result.merge 'reports' => [ { 'uid' => '123' } ])
           end
         end
       end

@@ -3,7 +3,7 @@ require 'helper'
 describe ProbeDockRSpec::UID do
   include FakeFS::SpecHelpers
   UID ||= ProbeDockRSpec::UID
-  ENVIRONMENT_VARIABLE = 'PROBE_DOCK_TEST_RUN_UID'
+  ENVIRONMENT_VARIABLE = 'PROBE_DOCK_TEST_REPORT_UID'
   UID_REGEXP = /\d{14}\-[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}/
 
   let(:workspace){ '/tmp' }
@@ -54,7 +54,7 @@ describe ProbeDockRSpec::UID do
   end
 
   describe "#generate_uid_to_file" do
-    
+
     it "should generate and save an uid" do
       subject.generate_uid_to_file
       expect(File.read(uid_file)).to match(UID_REGEXP)
@@ -70,7 +70,7 @@ describe ProbeDockRSpec::UID do
   end
 
   describe "#generate_uid_to_env" do
-    
+
     it "should generate and save an uid to the environment" do
       subject.generate_uid_to_env
       expect(ENV[ENVIRONMENT_VARIABLE]).to match(UID_REGEXP)
@@ -82,7 +82,7 @@ describe ProbeDockRSpec::UID do
       end
 
       it "should raise an error" do
-        expect{ subject.generate_uid_to_env }.to raise_error(UID::Error, /\$PROBE_DOCK_TEST_RUN_UID is already defined/)
+        expect{ subject.generate_uid_to_env }.to raise_error(UID::Error, /\$PROBE_DOCK_TEST_REPORT_UID is already defined/)
       end
     end
   end

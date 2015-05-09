@@ -3,7 +3,7 @@ require 'securerandom'
 module ProbeDockRSpec
 
   class UID
-    ENVIRONMENT_VARIABLE = 'PROBE_DOCK_TEST_RUN_UID'
+    ENVIRONMENT_VARIABLE = 'PROBE_DOCK_TEST_REPORT_UID'
 
     class Error < ProbeDockRSpec::Error; end
 
@@ -25,7 +25,7 @@ module ProbeDockRSpec
     end
 
     def generate_uid_to_env
-      raise Error.new("$PROBE_DOCK_TEST_RUN_UID is already defined") if env_var
+      raise Error.new("$PROBE_DOCK_TEST_REPORT_UID is already defined") if env_var
       ENV[ENVIRONMENT_VARIABLE] = generate_uid
     end
 

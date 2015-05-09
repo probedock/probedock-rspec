@@ -6,8 +6,7 @@
 
 ## Requirements
 
-* RSpec 3.1 (0.4+)
-  * *RSpec 2.14 is supported up to version 0.3.1*
+* RSpec 3+
 
 ## Installation
 
@@ -25,11 +24,7 @@ Manually:
 
 If you haven't done it already, follow the [setup procedure](#setup) below.
 
-To track a test, you must assign it a Probe Dock test key generated from your Probe Dock server.
-
-**NOTE: currently, all the tests in your test suite must be assigned a test key for the client to work.**
-
-Test keys are assigned to test using RSpec metadata:
+To track a test with a Probe Dock test key, use RSpec metadata:
 
 ```rb
 it "should work", probe_dock: { key: 'abcdefghijkl' } do
@@ -45,7 +40,7 @@ it(nil, probe_dock: { key: 'bcdefghijklm' }){ should validate_presence_of(:name)
 You must first set up the configuration file(s) for the project.
 This procedure is described here:
 
-* [Probe Setup Procedure](https://github.com/lotaris/rox-client#setup-procedure)
+* [Probe Setup Procedure](https://github.com/probe-dock/probe-dock-clients#setup-procedure)
 
 You must then enable the client in your spec helper file (e.g. `spec/spec_helper.rb`).
 

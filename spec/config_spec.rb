@@ -21,7 +21,7 @@ describe ProbeDockRSpec::Config do
   describe ".config" do
     let(:new_config){ double load: nil }
     before(:each){ allow(ProbeDockRSpec::Config).to receive(:new).and_return(new_config) }
-    
+
     it "should create, load and memoize a configuration" do
       expect(new_config).to receive(:load).once
       3.times{ expect(ProbeDockRSpec.config).to be(new_config) }
@@ -122,15 +122,12 @@ describe ProbeDockRSpec::Config do
 servers:
   a:
     apiUrl: "http://example.com/api"
-    apiKeyId: "0123456789"
-    apiKeySecret: "abcdefghijklmnopqrstuvwxyz"
+    apiToken: "abcdefghijklmnopqrstuvwxyz"
     projectApiId: "9876543210"
   b:
     apiUrl: "http://subdomain.example.com/api"
-    apiKeyId: "1234567890"
-    apiKeySecret: "bcdefghijklmnopqrstuvwxyza"
+    apiToken: "bcdefghijklmnopqrstuvwxyza"
 project:
-  name: A project
   version: 1.2.3
   apiId: "0123456789"
   category: A category
@@ -152,7 +149,6 @@ payload:
 
       it "should create a project" do
         expect(project_double).to receive(:update).with({
-          name: 'A project',
           version: '1.2.3',
           api_id: '9876543210',
           category: 'A category',
@@ -194,15 +190,13 @@ payload:
         expect(Server).to receive(:new).with({
           name: 'a',
           api_url: 'http://example.com/api',
-          api_key_id: '0123456789',
-          api_key_secret: 'abcdefghijklmnopqrstuvwxyz',
+          api_token: 'abcdefghijklmnopqrstuvwxyz',
           project_api_id: '9876543210'
         }).ordered
         expect(Server).to receive(:new).with({
           name: 'b',
           api_url: 'http://subdomain.example.com/api',
-          api_key_id: '1234567890',
-          api_key_secret: 'bcdefghijklmnopqrstuvwxyza',
+          api_token: 'bcdefghijklmnopqrstuvwxyza',
           project_api_id: '0123456789'
         })
         config.load
@@ -221,7 +215,6 @@ payload:
 
         it "should override project attributes" do
           expect(project_double).to receive(:update).with({
-            name: 'Another project',
             version: '2.3.4',
             api_id: '9876543210',
             category: 'Another category',
@@ -263,15 +256,13 @@ payload:
           expect(Server).to receive(:new).with({
             name: 'a',
             api_url: 'http://example.com/api',
-            api_key_id: '0123456789',
-            api_key_secret: 'abcdefghijklmnopqrstuvwxyz',
+            api_token: 'abcdefghijklmnopqrstuvwxyz',
             project_api_id: '9876543210'
           }).ordered
           expect(Server).to receive(:new).with({
             name: 'b',
             api_url: 'http://other-subdomain.example.com/api',
-            api_key_id: '2345678901',
-            api_key_secret: 'cdefghijklmnopqrstuvwxyzab',
+            api_token: 'cdefghijklmnopqrstuvwxyzab',
             project_api_id: '0000000000'
           })
           config.load
@@ -326,10 +317,8 @@ payload:
 servers:
   b:
     apiUrl: "http://other-subdomain.example.com/api"
-    apiKeyId: "2345678901"
-    apiKeySecret: "cdefghijklmnopqrstuvwxyzab"
+    apiToken: "cdefghijklmnopqrstuvwxyzab"
 project:
-  name: Another project
   version: 2.3.4
   apiId: "0000000000"
   category: Another category

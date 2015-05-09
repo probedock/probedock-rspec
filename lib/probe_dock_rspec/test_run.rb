@@ -2,9 +2,8 @@
 module ProbeDockRSpec
 
   class TestRun
-    # TODO: remove end time once API v0 is dead
     attr_reader :results, :project
-    attr_accessor :end_time, :duration, :uid
+    attr_accessor :duration, :uid
 
     def initialize project
       @results = []
@@ -35,13 +34,12 @@ module ProbeDockRSpec
       validate!
 
       {
-        'p' => @project.api_id,
-        'v' => @project.version,
-        'd' => @duration,
-        'r' => @results.collect{ |r| r.to_h options }
+        'projectId' => @project.api_id,
+        'version' => @project.version,
+        'duration' => @duration,
+        'results' => @results.collect{ |r| r.to_h options }
       }.tap do |h|
-        # FIXME: use new reports
-        h['u'] = @uid if @uid
+        h['reports'] = [ { 'uid' => @uid } ] if @uid
       end
     end
 
@@ -53,7 +51,7 @@ module ProbeDockRSpec
       raise PayloadError.new("Missing project") if !@project
       @project.validate!
 
-      # FIXME: log warnings
+      # FIXME: log info/warnings
       #validate_no_results_without_key
       #validate_no_duplicate_keys
     end

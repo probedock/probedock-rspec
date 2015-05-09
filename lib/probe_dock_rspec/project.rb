@@ -1,4 +1,3 @@
-
 module ProbeDockRSpec
 
   class Project
