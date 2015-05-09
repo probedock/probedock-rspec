@@ -37,11 +37,11 @@ module ProbeDockRSpec
 
     def to_h options = {}
       {
-        'k' => @key,
         'p' => @passed,
         'd' => @duration
       }.tap do |h|
 
+        h['k'] = @key if @key
         h['m'] = @message if @message
 
         cache = options[:cache]
@@ -60,7 +60,7 @@ module ProbeDockRSpec
     end
 
     def self.extract_key example, groups = []
-      (groups.collect{ |g| meta(g)[:key] } << meta(example)[:key]).compact.last
+      (groups.collect{ |g| meta(g)[:key] } << meta(example)[:key]).compact.reject{ |k| k.strip.empty? }.last
     end
 
     def self.meta holder

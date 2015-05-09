@@ -1,6 +1,6 @@
 # Probe Dock RSpec
 
-**RSpec probe for [Probe Dock](https://github.com/42inside/probe-dock).**
+**RSpec probe for [Probe Dock](https://github.com/probe-dock/probe-dock).**
 
 [![Gem Version](https://badge.fury.io/rb/probe-dock-rspec.png)](http://badge.fury.io/rb/probe-dock-rspec)
 

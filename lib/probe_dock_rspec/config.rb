@@ -154,7 +154,7 @@ module ProbeDockRSpec
     end
 
     def parse_server_options h
-      parse_options h, %w(name apiUrl apiKeyId apiKeySecret apiVersion projectApiId)
+      parse_options h, %w(name apiUrl apiToken apiVersion projectApiId)
     end
 
     def parse_payload_options h
@@ -162,8 +162,7 @@ module ProbeDockRSpec
     end
 
     def parse_project_options h
-      # TODO: remove project name once API v0 is dead
-      parse_options h, %w(name version apiId category tags tickets)
+      parse_options h, %w(version apiId category tags tickets)
     end
 
     def parse_options h, keys

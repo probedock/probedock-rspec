@@ -8,7 +8,7 @@ module ProbeDockRSpec
       @server = server
       @publish, @local_mode, @workspace = options[:publish], options[:local_mode], options[:workspace]
       @cache_payload, @print_payload, @save_payload = options[:cache_payload], options[:print_payload], options[:save_payload]
-      
+
       cache_options = { workspace: @workspace }
       cache_options.merge! server_name: @server.name, project_api_id: @server.project_api_id if @server
       @cache = Cache.new cache_options

@@ -43,7 +43,7 @@ describe ProbeDockRSpec::Server do
       let(:payload_response){ double code: 202 }
       let(:http_responses){ [ api_root_response, payload_response ] }
       let(:authentication_headers){ { 'Authorization' => %|ProbeDockApiKey id="#{api_key_id}" secret="#{api_key_secret}"| } }
-      let(:payload_headers){ { 'Content-Type' => 'application/vnd.42inside.probe-dock.payload.v1+json' } }
+      let(:payload_headers){ { 'Content-Type' => 'application/vnd.probe-dock.payload.v1+json' } }
 
       it "should not raise an error" do
         expect_upload.not_to raise_error

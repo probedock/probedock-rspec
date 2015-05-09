@@ -66,7 +66,7 @@ module ProbeDockRSpec
 
       @test_run.add_result example_notification.example, @groups, options
     end
-    
+
     def failure_message example_notification
       String.new.tap do |m|
         m << example_notification.description

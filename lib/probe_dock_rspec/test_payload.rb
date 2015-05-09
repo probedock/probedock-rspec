@@ -12,12 +12,7 @@ module ProbeDockRSpec
     end
 
     def to_h options = {}
-      case options[:version]
-      when 0
-        { 'r' => [ @run.to_h(options) ] }
-      else # version 1 by default
-        @run.to_h options
-      end
+      @run.to_h options
     end
   end
 end
