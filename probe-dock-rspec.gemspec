@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.authors = ["Simon Oulevay (Alpha Hydrae)"]
   s.date = "2015-05-09"
+  s.description = "RSpec client to publish test results to Probe Dock, a test tracking and analysis server."
   s.email = "simon.oulevay@gmail.com"
   s.extra_rdoc_files = [
     "LICENSE.txt",
@@ -39,7 +40,7 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/probe-dock/probe-dock-rspec"
   s.licenses = ["MIT"]
   s.rubygems_version = "2.4.5"
-  s.summary = "RSpec probe to send test results to Probe Dock."
+  s.summary = "RSpec client to publish test results to Probe Dock."
 
   if s.respond_to? :specification_version then
     s.specification_version = 4

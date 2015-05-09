@@ -17,7 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "probe-dock-rspec"
   gem.homepage = "https://github.com/probe-dock/probe-dock-rspec"
   gem.license = "MIT"
-  gem.summary = %Q{RSpec probe to send test results to Probe Dock.}
+  gem.summary = %Q{RSpec client to publish test results to Probe Dock.}
+  gem.description = %Q{RSpec client to publish test results to Probe Dock, a test tracking and analysis server.}
   gem.email = "simon.oulevay@gmail.com"
   gem.authors = ["Simon Oulevay (Alpha Hydrae)"]
   gem.files = Dir["lib/**/*.rb"] + %w(Gemfile LICENSE.txt README.md VERSION)
