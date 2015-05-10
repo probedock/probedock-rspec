@@ -4,6 +4,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/probe-dock-rspec.svg)](http://badge.fury.io/rb/probe-dock-rspec)
 [![Dependency Status](https://gemnasium.com/probe-dock/probe-dock-rspec.svg)](https://gemnasium.com/probe-dock/probe-dock-rspec)
+[![License](https://img.shields.io/github/license/probe-dock/probe-dock-rspec.svg)](LICENSE.txt)
 
 ## Requirements
 
