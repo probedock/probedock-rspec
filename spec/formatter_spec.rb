@@ -47,7 +47,6 @@ describe ProbeDockRSpec::Formatter do
 
     it "should set the end time and duration when stopped" do
       end_time = now + 12
-      expect(run_double).to receive(:end_time=).with(end_time.to_i * 1000)
       expect(run_double).to receive(:duration=).with(12000)
       allow(Time).to receive(:now).and_return(end_time)
       subject.stop double
