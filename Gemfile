@@ -14,8 +14,9 @@ gem 'rake', '~> 10.1'
 group :development do
   gem 'jeweler', '~> 2.0'
   gem 'rake-version', '~> 0.4'
-  gem 'simplecov', '~> 0.10'
+  gem 'simplecov', '~> 0.10', require: false
   gem 'fakefs', '~> 0.6', require: 'fakefs/safe'
   gem 'rspec-its', '~> 1.2'
   gem 'rspec-collection_matchers', '~> 1.1'
+  gem 'coveralls', '~> 0.8', require: false
 end

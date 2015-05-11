@@ -10,6 +10,14 @@ rescue Bundler::BundlerError => e
 end
 
 require 'simplecov'
+require 'coveralls'
+Coveralls.wear!
+
+SimpleCov.formatters = [
+  Coveralls::SimpleCov::Formatter,
+  SimpleCov::Formatter::HTMLFormatter
+]
+
 SimpleCov.start
 
 require 'rspec'

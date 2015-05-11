@@ -4,6 +4,8 @@
 
 [![Gem Version](https://badge.fury.io/rb/probe-dock-rspec.svg)](http://badge.fury.io/rb/probe-dock-rspec)
 [![Dependency Status](https://gemnasium.com/probe-dock/probe-dock-rspec.svg)](https://gemnasium.com/probe-dock/probe-dock-rspec)
+[![Build Status](https://secure.travis-ci.org/probe-dock/probe-dock-rspec.svg)](http://travis-ci.org/probe-dock/probe-dock-rspec)
+[![Coverage Status](https://coveralls.io/repos/probe-dock/probe-dock-rspec/badge.svg)](https://coveralls.io/r/probe-dock/probe-dock-rspec?branch=master)
 [![License](https://img.shields.io/github/license/probe-dock/probe-dock-rspec.svg)](LICENSE.txt)
 
 ## Requirements
