@@ -22,7 +22,7 @@ module ProbeDockRSpec
 
       test_run.uid = @uid.load_uid
 
-      payload_options = @server.payload_options
+      payload_options = {}
 
       cache_enabled = @cache_payload && load_cache
       payload_options[:cache] = @cache if cache_enabled

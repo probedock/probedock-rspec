@@ -4,13 +4,18 @@ require 'yaml'
 module ProbeDockRSpec
 
   def self.config
-    @config ||= Config.new.tap(&:load)
+    @config ||= Config.new.tap(&:load!)
   end
 
   def self.configure options = {}
+
     yield config if block_given?
+
+    config.check!
     config.load_warnings.each{ |w| warn Paint["Probe Dock - #{w}", :yellow] }
+
     config.setup! if options[:setup] != false
+
     config
   end
 
@@ -22,6 +27,7 @@ module ProbeDockRSpec
 
     def initialize
       @servers = []
+      @server = Server.new
       @project = Project.new
       @publish, @local_mode, @cache_payload, @print_payload, @save_payload = false, false, false, false, false
       @load_warnings = []
@@ -32,7 +38,7 @@ module ProbeDockRSpec
     end
 
     def servers
-      @servers.dup
+      @servers
     end
 
     # Plugs Probe Dock utilities into RSpec.
@@ -57,7 +63,10 @@ module ProbeDockRSpec
       }.select{ |k,v| !v.nil? }
     end
 
-    def load
+    def load!
+
+      @servers = []
+      @server = Server.new
 
       @load_warnings = []
       return unless config = load_config_files
@@ -71,21 +80,41 @@ module ProbeDockRSpec
       @print_payload = parse_env_flag :print_payload, !!config[:payload][:print]
       @save_payload = parse_env_flag :save_payload, !!config[:payload][:save]
 
-      @servers, @server = build_servers config
+      @servers, server = build_servers config
 
-      if @servers.empty?
-        @load_warnings << "No server defined"
-      elsif !@server_name
-        @load_warnings << "No server name given"
-      elsif !@server
-        @load_warnings << "Unknown server '#{@server_name}'"
+      if server
+        @server = server
+      else
+        @server.name = @server_name
       end
+
+      {
+        api_url: parse_env_option(:server_api_url),
+        api_token: parse_env_option(:server_api_token),
+        project_api_id: parse_env_option(:server_project_api_id)
+      }.each{ |k,v| @server.send "#{k}=", v if v }
 
       project_options = config[:project]
       project_options.merge! api_id: @server.project_api_id if @server and @server.project_api_id
       @project.update project_options
 
       self
+    end
+
+    def check!
+
+      configs = [ home_config_file, working_config_file ]
+      actual_configs = configs.select{ |f| File.exists? f }
+
+      if actual_configs.empty?
+        @load_warnings << %|no config file found, looking for:\n     #{configs.join "\n     "}|
+      end
+
+      if @servers.empty?
+        @load_warnings << "No server defined"
+      elsif !@server_name && !@server.name
+        @load_warnings << "No server name given"
+      end
     end
 
     private
@@ -105,11 +134,7 @@ module ProbeDockRSpec
 
       configs = [ home_config_file, working_config_file ]
       actual_configs = configs.select{ |f| File.exists? f }
-
-      if actual_configs.empty?
-        @load_warnings << %|no config file found, looking for:\n     #{configs.join "\n     "}|
-        return false
-      end
+      return false if actual_configs.empty?
 
       actual_configs.collect!{ |f| YAML.load_file f }
 

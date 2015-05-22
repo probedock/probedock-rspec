@@ -2,27 +2,19 @@ require 'helper'
 
 describe ProbeDockRSpec::Server do
   let(:api_token){ 'abcdefghijklmnopqrstuvwxyz' }
-  let(:options){ {
-    name: 'A server',
-    api_url: 'http://example.com/api',
-    api_token: api_token,
-    api_version: 42,
-    project_api_id: '0000000000'
-  } }
+  let :options do
+    {
+      name: 'A server',
+      api_url: 'http://example.com/api',
+      api_token: api_token,
+      project_api_id: '0000000000'
+    }
+  end
   let(:server){ ProbeDockRSpec::Server.new options }
   subject{ server }
 
   it "should set its attributes" do
     expect(options.keys.inject({}){ |memo,k| memo[k] = subject.send(k); memo }).to eq(options)
-  end
-
-  describe "without an api version" do
-    let(:options){ super().delete_if{ |k,v| k == :api_version } }
-    its(:api_version){ should eq(1) }
-  end
-
-  it "should create payload options" do
-    expect(subject.payload_options).to eq(version: 42)
   end
 
   describe "#upload" do

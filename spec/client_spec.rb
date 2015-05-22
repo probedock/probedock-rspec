@@ -27,7 +27,7 @@ describe ProbeDockRSpec::Client do
   let(:uid_double){ double load_uid: '42' }
   let(:run_double){ double :uid= => nil }
 
-  let(:server_options){ { name: 'A server', api_url: API_URL, project_api_id: '0123456789', payload_options: {}, upload: nil } }
+  let(:server_options){ { name: 'A server', api_url: API_URL, project_api_id: '0123456789', upload: nil } }
   let(:server){ double server_options }
   let(:client_options){ { publish: true, workspace: WORKSPACE } }
   let(:client){ ProbeDockRSpec::Client.new server, client_options }

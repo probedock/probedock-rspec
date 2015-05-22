@@ -106,7 +106,7 @@ describe ProbeDockRSpec::Config do
     let(:home_config_path){ File.expand_path('~/.probe-dock/config.yml') }
     let(:working_config){ nil }
     let(:working_config_path){ '/project/probe-dock.yml' }
-    let(:loaded_config){ config.tap &:load }
+    let(:loaded_config){ config.tap(&:load!).tap(&:check!) }
 
     before :each do
       FileUtils.mkdir_p '/project'
@@ -155,7 +155,7 @@ payload:
           tags: [ 'a', 'b' ],
           tickets: [ 'c', 'd' ]
         })
-        config.load
+        config.load!
         expect(config.project).to be(project_double)
       end
 
@@ -199,7 +199,7 @@ payload:
           api_token: 'bcdefghijklmnopqrstuvwxyza',
           project_api_id: '0123456789'
         })
-        config.load
+        config.load!
         expect(config.servers).to eq(server_doubles)
       end
 
@@ -221,7 +221,7 @@ payload:
             tags: 'oneTag',
             tickets: [ 'c', 'd' ]
           })
-          config.load
+          config.load!
           expect(config.project).to be(project_double)
         end
 
@@ -265,7 +265,7 @@ payload:
             api_token: 'cdefghijklmnopqrstuvwxyzab',
             project_api_id: '0000000000'
           })
-          config.load
+          config.load!
           expect(config.servers).to eq(server_doubles)
         end
 
@@ -383,14 +383,18 @@ server: unknown
         | }
         its(:server){ should be_nil }
         its(:publish?){ should be(true) }
-        its(:load_warnings){ should have(1).items }
-        it{ should have_elements_matching(:load_warnings, /unknown server 'unknown'/i) }
+        its(:load_warnings){ should be_empty }
       end
     end
   end
 
   def server_double options = {}
-    double name: options[:name].to_s.strip, project_api_id: options[:project_api_id]
+    options ||= {}
+
+    double_options = { name: options[:name].to_s.strip, project_api_id: options[:project_api_id] }
+    double_options[:name=] = nil
+
+    double double_options
   end
 
   def attrs_hash source, *attrs
