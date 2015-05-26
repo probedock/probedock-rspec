@@ -19,7 +19,7 @@ describe ProbeDockRSpec::Config do
   end
 
   describe ".config" do
-    let(:new_config){ double load: nil }
+    let(:new_config){ double load!: nil }
     before(:each){ allow(ProbeDockRSpec::Config).to receive(:new).and_return(new_config) }
 
     it "should create, load and memoize a configuration" do
@@ -37,6 +37,11 @@ describe ProbeDockRSpec::Config do
       result = nil
       expect{ |b| result = ProbeDockRSpec.configure &b }.to yield_with_args(config)
       expect(result).to be(config)
+    end
+
+    it "should check the configuration" do
+      expect(config).to receive(:check!)
+      ProbeDockRSpec.configure
     end
 
     it "should set up the configuration" do
@@ -66,6 +71,11 @@ describe ProbeDockRSpec::Config do
 
     it "should create a project" do
       expect(Project).to receive(:new)
+      subject.new
+    end
+
+    it "should create a server" do
+      expect(Server).to receive(:new)
       subject.new
     end
   end
@@ -273,6 +283,24 @@ payload:
           expect(loaded_config.server).to eq(loaded_config.servers[0])
         end
 
+        describe "with environment variables overriding the server configuration" do
+          let :probe_dock_env_vars do
+            {
+              server_api_url: 'http://yet-another-subdomain.example.com',
+              server_api_token: 'defghijklmnopqrstuvwxyzabc',
+              server_project_api_id: '111111111'
+            }
+          end
+
+          before(:each){ probe_dock_env_vars.each_pair{ |k,v| ENV["PROBE_DOCK_#{k.upcase}"] = v } }
+
+          it "should override the selected server" do
+            expect(loaded_config.server).to have_received(:api_url=).with('http://yet-another-subdomain.example.com')
+            expect(loaded_config.server).to have_received(:api_token=).with('defghijklmnopqrstuvwxyzabc')
+            expect(loaded_config.server).to have_received(:project_api_id=).with('111111111')
+          end
+        end
+
         describe "with overriding environment variables" do
           let :probe_dock_env_vars do
             {
@@ -308,6 +336,22 @@ payload:
 
           it "should select the specified server" do
             expect(loaded_config.server).to eq(loaded_config.servers[1])
+          end
+
+          describe "with environment variables overriding the server configuration" do
+            let :probe_dock_env_vars do
+              {
+                server_api_url: 'http://yet-another-subdomain.example.com',
+                server_api_token: 'defghijklmnopqrstuvwxyzabc',
+                server_project_api_id: '111111111'
+              }
+            end
+
+            it "should override the selected server" do
+              expect(loaded_config.server).to have_received(:api_url=).with('http://yet-another-subdomain.example.com')
+              expect(loaded_config.server).to have_received(:api_token=).with('defghijklmnopqrstuvwxyzabc')
+              expect(loaded_config.server).to have_received(:project_api_id=).with('111111111')
+            end
           end
         end
       end
@@ -392,10 +436,15 @@ server: unknown
     options ||= {}
 
     double_options = %i(name api_url api_token project_api_id).inject({}){ |memo,k| memo[k] = options[k] ? options[k].to_s : nil; memo }
-    double_options[:clear] = nil
-    double_options[:name=] = nil
 
-    double double_options
+    server = double double_options
+
+    %i(clear name= api_url= api_token= project_api_id=).each do |setter|
+      allow(server).to receive(setter)
+      nil
+    end
+
+    server
   end
 
   def attrs_hash source, *attrs

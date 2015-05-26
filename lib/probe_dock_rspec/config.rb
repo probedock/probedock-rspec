@@ -38,7 +38,7 @@ module ProbeDockRSpec
     end
 
     def servers
-      @servers
+      @servers.dup
     end
 
     # Plugs Probe Dock utilities into RSpec.
@@ -166,7 +166,7 @@ module ProbeDockRSpec
 
     def parse_env_flag name, default = false
       val = parse_env_option name
-      val ? !!val.to_s.strip.match(/\A(1|t|true)\Z/i) : default
+      val ? !!val.to_s.strip.match(/\A(1|y|yes|t|true)\Z/i) : default
     end
 
     def parse_env_option name
