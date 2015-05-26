@@ -19,7 +19,6 @@ module ProbeDockRSpec
     end
 
     def start notification
-      # TODO: measure milliseconds
       @start_time = Time.now
     end
 

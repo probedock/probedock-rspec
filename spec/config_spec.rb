@@ -23,14 +23,14 @@ describe ProbeDockRSpec::Config do
     before(:each){ allow(ProbeDockRSpec::Config).to receive(:new).and_return(new_config) }
 
     it "should create, load and memoize a configuration" do
-      expect(new_config).to receive(:load).once
+      expect(new_config).to receive(:load!).once
       3.times{ expect(ProbeDockRSpec.config).to be(new_config) }
     end
   end
 
   describe ".configure" do
     let(:load_warnings){ [] }
-    let(:config){ double load: nil, setup!: nil, load_warnings: load_warnings }
+    let(:config){ double load!: nil, check!: nil, setup!: nil, load_warnings: load_warnings }
     before(:each){ allow(ProbeDockRSpec).to receive(:config).and_return(config) }
 
     it "should yield and return the configuration" do
@@ -87,7 +87,7 @@ describe ProbeDockRSpec::Config do
     its(:print_payload?){ should be(false) }
     its(:save_payload?){ should be(false) }
     its(:servers){ should be_empty }
-    its(:server){ should be_nil }
+    its(:server){ should have_server_configuration(name: nil) }
     its(:workspace){ should be_nil }
   end
 
@@ -200,7 +200,7 @@ payload:
           project_api_id: '0123456789'
         })
         config.load!
-        expect(config.servers).to eq(server_doubles)
+        expect(config.servers).to eq(server_doubles.last(2))
       end
 
       it "should select the specified server" do
@@ -266,7 +266,7 @@ payload:
             project_api_id: '0000000000'
           })
           config.load!
-          expect(config.servers).to eq(server_doubles)
+          expect(config.servers).to eq(server_doubles.last(2))
         end
 
         it "should select the specified server" do
@@ -346,15 +346,15 @@ workspace: /tmp
       subject{ loaded_config }
 
       describe "with no config files" do
-        its(:server){ should be_nil }
+        its(:server){ should have_server_configuration(name: nil) }
         its(:publish?){ should be(false) }
-        its(:load_warnings){ should have(1).items }
-        it("should warn that no config file was found"){ should have_elements_matching(:load_warnings, /no config file found/, home_config_path, working_config_path) }
+        its(:load_warnings){ should have(2).items }
+        it("should warn that no config file was found"){ should have_elements_matching(:load_warnings, /no config file found/i, home_config_path, working_config_path, /no server defined/i) }
       end
 
       describe "with no server" do
         let(:working_config){ "publish: true" }
-        its(:server){ should be_nil }
+        its(:server){ should have_server_configuration(name: nil) }
         its(:publish?){ should be(true) }
         its(:load_warnings){ should have(1).items }
         it{ should have_elements_matching(:load_warnings, /no server defined/i) }
@@ -367,7 +367,7 @@ servers:
     apiUrl: http://example.com/api
 publish: true
         | }
-        its(:server){ should be_nil }
+        its(:server){ should have_server_configuration(name: nil) }
         its(:publish?){ should be(true) }
         its(:load_warnings){ should have(1).items }
         it{ should have_elements_matching(:load_warnings, /no server name given/i) }
@@ -381,7 +381,7 @@ servers:
 publish: true
 server: unknown
         | }
-        its(:server){ should be_nil }
+        its(:server){ should have_server_configuration(name: nil) }
         its(:publish?){ should be(true) }
         its(:load_warnings){ should be_empty }
       end
@@ -391,7 +391,8 @@ server: unknown
   def server_double options = {}
     options ||= {}
 
-    double_options = { name: options[:name].to_s.strip, project_api_id: options[:project_api_id] }
+    double_options = %i(name api_url api_token project_api_id).inject({}){ |memo,k| memo[k] = options[k] ? options[k].to_s : nil; memo }
+    double_options[:clear] = nil
     double_options[:name=] = nil
 
     double double_options

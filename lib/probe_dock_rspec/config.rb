@@ -65,8 +65,8 @@ module ProbeDockRSpec
 
     def load!
 
-      @servers = []
-      @server = Server.new
+      @server.clear
+      @servers.clear
 
       @load_warnings = []
       return unless config = load_config_files

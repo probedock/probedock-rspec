@@ -22,6 +22,13 @@ module ProbeDockRSpec
       @project_api_id = options[:project_api_id].to_s if options[:project_api_id]
     end
 
+    def clear
+      @name = nil
+      @api_url = nil
+      @api_token = nil
+      @project_api_id = nil
+    end
+
     def upload payload
       validate!
 
