@@ -62,6 +62,13 @@ describe ProbeDockRSpec::Server do
         expect(HTTParty).to receive(:post).once.with('http://example.com/api/publish', body: Oj.dump(payload, mode: :strict), headers: headers)
         subject.upload payload
       end
+
+      describe "without a project api id" do
+        let(:options){ super().delete_if{ |k,v| k == :project_api_id } }
+        it "should not raise an error" do
+          expect_upload.not_to raise_error
+        end
+      end
     end
 
     describe "when the payload is not accepted" do
@@ -91,13 +98,6 @@ describe ProbeDockRSpec::Server do
       let(:options){ super().delete_if{ |k,v| k == :api_token } }
       it "should raise an error" do
         expect_upload.to raise_server_error(/missing/, /apiToken/)
-      end
-    end
-
-    describe "without a project api id" do
-      let(:options){ super().delete_if{ |k,v| k == :project_api_id } }
-      it "should raise an error" do
-        expect_upload.to raise_server_error(/missing/, /projectApiId/)
       end
     end
   end

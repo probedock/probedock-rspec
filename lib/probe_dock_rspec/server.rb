@@ -43,7 +43,7 @@ module ProbeDockRSpec
     private
 
     def validate!
-      required = { "name" => @name, "apiUrl" => @api_url, "apiToken" => @api_token, "projectApiId" => @project_api_id }
+      required = { "name" => @name, "apiUrl" => @api_url, "apiToken" => @api_token }
       missing = required.inject([]){ |memo,(k,v)| v.to_s.strip.length <= 0 ? memo << k : memo }
       raise Error.new("Server #{@name} is missing the following options: #{missing.join ', '}") if missing.any?
     end
