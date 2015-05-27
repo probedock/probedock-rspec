@@ -60,8 +60,8 @@ describe ProbeDockRSpec::Config do
       it "should print load warnings" do
         c = capture{ ProbeDockRSpec.configure }
         expect(c.stdout).to be_empty
-        expect(c.stderr).to match('Probe Dock - a')
-        expect(c.stderr).to match('Probe Dock - b')
+        expect(c.stderr).to match('ProbeDock - a')
+        expect(c.stderr).to match('ProbeDock - b')
       end
     end
   end
@@ -113,9 +113,9 @@ describe ProbeDockRSpec::Config do
 
   describe "when loaded" do
     let(:home_config){ nil }
-    let(:home_config_path){ File.expand_path('~/.probe-dock/config.yml') }
+    let(:home_config_path){ File.expand_path('~/.probedock/config.yml') }
     let(:working_config){ nil }
-    let(:working_config_path){ '/project/probe-dock.yml' }
+    let(:working_config_path){ '/project/probedock.yml' }
     let(:loaded_config){ config.tap(&:load!).tap(&:check!) }
 
     before :each do
@@ -379,8 +379,8 @@ workspace: /tmp
         it_should_behave_like "an overriden config"
 
         describe "with $PROBE_DOCK_CONFIG overriding the working file path" do
-          let(:working_config_path){ '/tmp/foo/probe-dock.yml' }
-          before(:each){ ENV['PROBE_DOCK_CONFIG'] = '/tmp/foo/probe-dock.yml' }
+          let(:working_config_path){ '/tmp/foo/probedock.yml' }
+          before(:each){ ENV['PROBE_DOCK_CONFIG'] = '/tmp/foo/probedock.yml' }
           it_should_behave_like "an overriden config"
         end
       end

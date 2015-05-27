@@ -1,6 +1,6 @@
 require 'yaml'
 
-# Utilities to send test results to Probe Dock.
+# Utilities to send test results to ProbeDock.
 module ProbeDockRSpec
 
   def self.config
@@ -12,7 +12,7 @@ module ProbeDockRSpec
     yield config if block_given?
 
     config.check!
-    config.load_warnings.each{ |w| warn Paint["Probe Dock - #{w}", :yellow] }
+    config.load_warnings.each{ |w| warn Paint["ProbeDock - #{w}", :yellow] }
 
     config.setup! if options[:setup] != false
 
@@ -41,7 +41,7 @@ module ProbeDockRSpec
       @servers.dup
     end
 
-    # Plugs Probe Dock utilities into RSpec.
+    # Plugs ProbeDock utilities into RSpec.
     def setup!
       ::RSpec.configure do |c|
         c.add_formatter Formatter
@@ -157,11 +157,11 @@ module ProbeDockRSpec
     end
 
     def home_config_file
-      File.join File.expand_path('~'), '.probe-dock', 'config.yml'
+      File.join File.expand_path('~'), '.probedock', 'config.yml'
     end
 
     def working_config_file
-      File.expand_path ENV['PROBE_DOCK_CONFIG'] || 'probe-dock.yml', Dir.pwd
+      File.expand_path ENV['PROBE_DOCK_CONFIG'] || 'probedock.yml', Dir.pwd
     end
 
     def parse_env_flag name, default = false

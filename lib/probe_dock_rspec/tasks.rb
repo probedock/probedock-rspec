@@ -9,23 +9,23 @@ module ProbeDockRSpec
 
       namespace :spec do
 
-        namespace 'probe-dock' do
+        namespace 'probedock' do
 
-          desc "Generate a test run UID to group test results in Probe Dock (stored in an environment variable)"
+          desc "Generate a test run UID to group test results in ProbeDock (stored in an environment variable)"
           task :uid do
             trace do
               uid = uid_manager.generate_uid_to_env
-              puts Paint["Probe Dock - Generated UID for test run: #{uid}", :cyan]
+              puts Paint["ProbeDock - Generated UID for test run: #{uid}", :cyan]
             end
           end
 
           namespace :uid do
 
-            desc "Generate a test run UID to group test results in Probe Dock (stored in a file)"
+            desc "Generate a test run UID to group test results in ProbeDock (stored in a file)"
             task :file do
               trace do
                 uid = uid_manager.generate_uid_to_file
-                puts Paint["Probe Dock - Generated UID for test run: #{uid}", :cyan]
+                puts Paint["ProbeDock - Generated UID for test run: #{uid}", :cyan]
               end
             end
 
@@ -33,7 +33,7 @@ module ProbeDockRSpec
             task :clean do
               trace do
                 uid_manager.clean_uid
-                puts Paint["Probe Dock - Cleaned test run UID", :cyan]
+                puts Paint["ProbeDock - Cleaned test run UID", :cyan]
               end
             end
           end
@@ -50,7 +50,7 @@ module ProbeDockRSpec
         begin
           block.call
         rescue UID::Error => e
-          warn Paint["Probe Dock - #{e.message}", :red]
+          warn Paint["ProbeDock - #{e.message}", :red]
         end
       end
     end

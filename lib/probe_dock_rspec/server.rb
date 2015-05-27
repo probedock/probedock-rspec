@@ -49,7 +49,7 @@ module ProbeDockRSpec
     end
 
     def payload_headers
-      { 'Authorization' => "Bearer #{@api_token}", 'Content-Type' => 'application/vnd.probe-dock.payload.v1+json' }
+      { 'Authorization' => "Bearer #{@api_token}", 'Content-Type' => 'application/vnd.probedock.payload.v1+json' }
     end
 
     def payload_uri

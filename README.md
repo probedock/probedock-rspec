@@ -1,12 +1,12 @@
-# Probe Dock RSpec
+# ProbeDock RSpec
 
-**RSpec probe for [Probe Dock](https://github.com/probe-dock/probe-dock).**
+**RSpec probe for [ProbeDock](https://github.com/probedock/probedock).**
 
-[![Gem Version](https://badge.fury.io/rb/probe-dock-rspec.svg)](http://badge.fury.io/rb/probe-dock-rspec)
-[![Dependency Status](https://gemnasium.com/probe-dock/probe-dock-rspec.svg)](https://gemnasium.com/probe-dock/probe-dock-rspec)
-[![Build Status](https://secure.travis-ci.org/probe-dock/probe-dock-rspec.svg)](http://travis-ci.org/probe-dock/probe-dock-rspec)
-[![Coverage Status](https://coveralls.io/repos/probe-dock/probe-dock-rspec/badge.svg)](https://coveralls.io/r/probe-dock/probe-dock-rspec?branch=master)
-[![License](https://img.shields.io/github/license/probe-dock/probe-dock-rspec.svg)](LICENSE.txt)
+[![Gem Version](https://badge.fury.io/rb/probedock-rspec.svg)](http://badge.fury.io/rb/probedock-rspec)
+[![Dependency Status](https://gemnasium.com/probedock/probedock-rspec.svg)](https://gemnasium.com/probedock/probedock-rspec)
+[![Build Status](https://secure.travis-ci.org/probedock/probedock-rspec.svg)](http://travis-ci.org/probedock/probedock-rspec)
+[![Coverage Status](https://coveralls.io/repos/probedock/probedock-rspec/badge.svg)](https://coveralls.io/r/probedock/probedock-rspec?branch=master)
+[![License](https://img.shields.io/github/license/probedock/probedock-rspec.svg)](LICENSE.txt)
 
 ## Requirements
 
@@ -17,18 +17,18 @@
 In your Gemfile:
 
 ```rb
-gem 'probe-dock-rspec', '~> 0.4.1'
+gem 'probedock-rspec', '~> 0.4.1'
 ```
 
 Manually:
 
-    gem install probe-dock-rspec
+    gem install probedock-rspec
 
 ## Usage
 
 If you haven't done it already, follow the [setup procedure](#setup) below.
 
-To track a test with a Probe Dock test key, use RSpec metadata:
+To track a test with a ProbeDock test key, use RSpec metadata:
 
 ```rb
 it "should work", probe_dock: { key: 'abcdefghijkl' } do
@@ -44,7 +44,7 @@ it(nil, probe_dock: { key: 'bcdefghijklm' }){ should validate_presence_of(:name)
 You must first set up the configuration file(s) for the project.
 This procedure is described here:
 
-* [Probe Setup Procedure](https://github.com/probe-dock/probe-dock-clients#setup-procedure)
+* [Probe Setup Procedure](https://github.com/probedock/probedock-clients#setup-procedure)
 
 You must then enable the client in your spec helper file (e.g. `spec/spec_helper.rb`).
 
@@ -56,7 +56,7 @@ ProbeDockRSpec.configure do |config|
 end
 ```
 
-The next time you run your test suite, the RSpec probe will send the results to your Probe Dock server.
+The next time you run your test suite, the RSpec probe will send the results to your ProbeDock server.
 
 ## Contributing
 
@@ -69,5 +69,5 @@ Please add a [changelog](CHANGELOG.md) entry with your name for new features and
 
 ## License
 
-Probe Dock RSpec is licensed under the [MIT License](http://opensource.org/licenses/MIT).
+ProbeDock RSpec is licensed under the [MIT License](http://opensource.org/licenses/MIT).
 See [LICENSE.txt](LICENSE.txt) for the full license.
