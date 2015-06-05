@@ -1,6 +1,6 @@
-# ProbeDock RSpec
+# Probe Dock RSpec
 
-**RSpec probe for [ProbeDock](https://github.com/probedock/probedock).**
+**RSpec probe for [Probe Dock](https://github.com/probedock/probedock).**
 
 [![Gem Version](https://badge.fury.io/rb/probedock-rspec.svg)](http://badge.fury.io/rb/probedock-rspec)
 [![Dependency Status](https://gemnasium.com/probedock/probedock-rspec.svg)](https://gemnasium.com/probedock/probedock-rspec)
@@ -28,7 +28,7 @@ Manually:
 
 If you haven't done it already, follow the [setup procedure](#setup) below.
 
-To track a test with a ProbeDock test key, use RSpec metadata:
+To track a test with a Probe Dock test key, use RSpec metadata:
 
 ```rb
 it "should work", probe_dock: { key: 'abcdefghijkl' } do
@@ -56,7 +56,7 @@ ProbeDockRSpec.configure do |config|
 end
 ```
 
-The next time you run your test suite, the RSpec probe will send the results to your ProbeDock server.
+The next time you run your test suite, the RSpec probe will send the results to your Probe Dock server.
 
 ## Contributing
 
@@ -69,5 +69,5 @@ Please add a [changelog](CHANGELOG.md) entry with your name for new features and
 
 ## License
 
-ProbeDock RSpec is licensed under the [MIT License](http://opensource.org/licenses/MIT).
+Probe Dock RSpec is licensed under the [MIT License](http://opensource.org/licenses/MIT).
 See [LICENSE.txt](LICENSE.txt) for the full license.

@@ -22,7 +22,7 @@ module ProbeDockRSpec
       return false unless payload = build_payload(test_run, payload_options)
 
       published = if !@publish
-        puts Paint["ProbeDock - Publishing disabled", :yellow]
+        puts Paint["Probe Dock - Publishing disabled", :yellow]
         false
       elsif publish_payload payload
         true
@@ -50,12 +50,12 @@ module ProbeDockRSpec
 
     def fail msg, type = :error
       styles = { warning: [ :yellow ], error: [ :bold, :red ] }
-      warn Paint["ProbeDock - #{msg}", *styles[type]]
+      warn Paint["Probe Dock - #{msg}", *styles[type]]
       false
     end
 
     def print_payload payload
-      puts Paint['ProbeDock - Printing payload...', :yellow]
+      puts Paint['Probe Dock - Printing payload...', :yellow]
       begin
         puts JSON.pretty_generate(payload)
       rescue
@@ -78,21 +78,21 @@ module ProbeDockRSpec
 
     def publish_payload payload
 
-      puts Paint["ProbeDock - Sending payload to #{@server.api_url}...", :magenta]
+      puts Paint["Probe Dock - Sending payload to #{@server.api_url}...", :magenta]
 
       begin
         if @local_mode
-          puts Paint['ProbeDock - LOCAL MODE: not actually sending payload.', :yellow]
+          puts Paint['Probe Dock - LOCAL MODE: not actually sending payload.', :yellow]
         else
           @server.upload payload
         end
-        puts Paint["ProbeDock - Done!", :green]
+        puts Paint["Probe Dock - Done!", :green]
         true
       rescue Server::Error => e
-        warn Paint["ProbeDock - Upload failed!", :red, :bold]
-        warn Paint["ProbeDock - #{e.message}", :red, :bold]
+        warn Paint["Probe Dock - Upload failed!", :red, :bold]
+        warn Paint["Probe Dock - #{e.message}", :red, :bold]
         if e.response
-          warn Paint["ProbeDock - Dumping response body...", :red, :bold]
+          warn Paint["Probe Dock - Dumping response body...", :red, :bold]
           warn e.response.body
         end
         false

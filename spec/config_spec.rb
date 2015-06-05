@@ -60,8 +60,8 @@ describe ProbeDockRSpec::Config do
       it "should print load warnings" do
         c = capture{ ProbeDockRSpec.configure }
         expect(c.stdout).to be_empty
-        expect(c.stderr).to match('ProbeDock - a')
-        expect(c.stderr).to match('ProbeDock - b')
+        expect(c.stderr).to match('Probe Dock - a')
+        expect(c.stderr).to match('Probe Dock - b')
       end
     end
   end

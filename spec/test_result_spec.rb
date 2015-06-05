@@ -182,15 +182,15 @@ describe ProbeDockRSpec::TestResult do
   describe ".meta" do
     subject{ ProbeDockRSpec::TestResult }
 
-    it "should extract ProbeDock metadata" do
+    it "should extract Probe Dock metadata" do
       expect(subject.meta(double(metadata: { probe_dock: { foo: 'bar' } }))).to eq(foo: 'bar')
     end
 
-    it "should extract ProbeDock metadata when the key replaces the options" do
+    it "should extract Probe Dock metadata when the key replaces the options" do
       expect(subject.meta(double(metadata: { probe_dock: 'foo' }))).to eq(key: 'foo')
     end
 
-    it "should not raise an error if there is no ProbeDock metadata" do
+    it "should not raise an error if there is no Probe Dock metadata" do
       expect(subject.meta(double(metadata: {}))).to eq({})
     end
   end

@@ -18,7 +18,7 @@ describe ProbeDockRSpec::Tasks do
     subject
   end
 
-  it "should define ProbeDock rake tasks" do
+  it "should define Probe Dock rake tasks" do
     expect(task('spec:probedock:uid')).not_to be_nil
     expect(task('spec:probedock:uid:file')).not_to be_nil
     expect(task('spec:probedock:uid:clean')).not_to be_nil
