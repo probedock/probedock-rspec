@@ -22,14 +22,14 @@ module ProbeDockRSpec
   class Config
     # TODO: add silent/verbose option(s)
     class Error < ProbeDockRSpec::Error; end
-    attr_writer :publish, :local_mode, :cache_payload, :print_payload, :save_payload
+    attr_writer :publish, :local_mode, :print_payload, :save_payload
     attr_reader :project, :server, :workspace, :load_warnings
 
     def initialize
       @servers = []
       @server = Server.new
       @project = Project.new
-      @publish, @local_mode, @cache_payload, @print_payload, @save_payload = false, false, false, false, false
+      @publish, @local_mode, @print_payload, @save_payload = false, false, false, false
       @load_warnings = []
     end
 
@@ -48,7 +48,7 @@ module ProbeDockRSpec
       end
     end
 
-    %w(publish local_mode cache_payload print_payload save_payload).each do |name|
+    %w(publish local_mode print_payload save_payload).each do |name|
       define_method("#{name}?"){ instance_variable_get("@#{name}") }
     end
 
@@ -57,7 +57,6 @@ module ProbeDockRSpec
         publish: @publish,
         local_mode: @local_mode,
         workspace: @workspace,
-        cache_payload: @cache_payload,
         print_payload: @print_payload,
         save_payload: @save_payload
       }.select{ |k,v| !v.nil? }
@@ -76,7 +75,6 @@ module ProbeDockRSpec
       @local_mode = parse_env_flag(:local) || !!config[:local]
 
       self.workspace = parse_env_option(:workspace) || config[:workspace]
-      @cache_payload = parse_env_flag :cache_payload, !!config[:payload][:cache]
       @print_payload = parse_env_flag :print_payload, !!config[:payload][:print]
       @save_payload = parse_env_flag :save_payload, !!config[:payload][:save]
 
@@ -183,7 +181,7 @@ module ProbeDockRSpec
     end
 
     def parse_payload_options h
-      parse_options h, %w(save cache print)
+      parse_options h, %w(save print)
     end
 
     def parse_project_options h

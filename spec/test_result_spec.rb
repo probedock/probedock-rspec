@@ -160,7 +160,8 @@ describe ProbeDockRSpec::TestResult do
         'm' => 'Yeehaw!',
         'c' => 'A category',
         'g' => [ 'a', 'b' ],
-        't' => [ 't1', 't2' ]
+        't' => [ 't1', 't2' ],
+        'a' => {}
       }
     end
 
@@ -172,34 +173,8 @@ describe ProbeDockRSpec::TestResult do
       let(:project_options){ { category: nil, tags: nil, tickets: nil } }
       let(:result_options){ super().merge message: nil }
 
-      it "should not include them" do
-        expect(subject).to eq(expected_result.delete_if{ |k,v| %w(m c g t).include? k })
-      end
-    end
-
-    describe "with a cache" do
-      let(:cache_double){ double known?: false, stale?: false }
-      let(:to_h_options){ super().merge cache: cache_double }
-
-      it "should serialize the result" do
-        expect(subject).to eq(expected_result)
-      end
-
-      describe "when cached" do
-        let(:cache_double){ double known?: true, stale?: false }
-        let(:to_h_options){ super().merge cache: cache_double }
-
-        it "should serialize the result without known data" do
-          expect(subject).to eq(expected_result.delete_if{ |k,v| %w(n c g t).include? k })
-        end
-
-        describe "and stale" do
-          let(:cache_double){ double known?: true, stale?: true }
-
-          it "should serialize the result" do
-            expect(subject).to eq(expected_result)
-          end
-        end
+      it "should reset them" do
+        expect(subject).to eq(expected_result.delete_if{ |k,v| k == 'm' }.merge({ 'c' => nil, 'g' => [], 't' => []}))
       end
     end
   end

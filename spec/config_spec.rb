@@ -93,7 +93,6 @@ describe ProbeDockRSpec::Config do
     its(:publish?){ should be(false) }
     its(:local_mode?){ should be(false) }
     its(:project){ should be(project_double) }
-    its(:cache_payload?){ should be(false) }
     its(:print_payload?){ should be(false) }
     its(:save_payload?){ should be(false) }
     its(:servers){ should be_empty }
@@ -148,7 +147,6 @@ local: true
 server: a
 workspace: /old
 payload:
-  cache: false
   print: true
   save: false
       | }
@@ -177,9 +175,8 @@ payload:
       end
 
       it "should set the workspace attributes" do
-        expect(attrs_hash(loaded_config, :workspace, :cache_payload?, :print_payload?, :save_payload?)).to eq({
+        expect(attrs_hash(loaded_config, :workspace, :print_payload?, :save_payload?)).to eq({
           workspace: '/old',
-          cache_payload?: false,
           print_payload?: true,
           save_payload?: false
         })
@@ -190,7 +187,6 @@ payload:
           publish: true,
           local_mode: true,
           workspace: '/old',
-          cache_payload: false,
           print_payload: true,
           save_payload: false
         })
@@ -243,9 +239,8 @@ payload:
         end
 
         it "should set the workspace attributes" do
-          expect(attrs_hash(loaded_config, :workspace, :cache_payload?, :print_payload?, :save_payload?)).to eq({
+          expect(attrs_hash(loaded_config, :workspace, :print_payload?, :save_payload?)).to eq({
             workspace: '/tmp',
-            cache_payload?: true,
             print_payload?: false,
             save_payload?: true
           })
@@ -256,7 +251,6 @@ payload:
             publish: true,
             local_mode: false,
             workspace: '/tmp',
-            cache_payload: true,
             print_payload: false,
             save_payload: true
           })
@@ -308,7 +302,6 @@ payload:
               local: '1',
               server: 'b',
               workspace: '/opt',
-              cache_payload: '0',
               print_payload: '1'
             }
           end
@@ -326,9 +319,8 @@ payload:
           end
 
           it "should set the workspace attributes" do
-            expect(attrs_hash(loaded_config, :workspace, :cache_payload?, :print_payload?, :save_payload?)).to eq({
+            expect(attrs_hash(loaded_config, :workspace, :print_payload?, :save_payload?)).to eq({
               workspace: '/opt',
-              cache_payload?: false,
               print_payload?: true,
               save_payload?: true
             })
@@ -368,7 +360,6 @@ project:
   category: Another category
   tags: oneTag
 payload:
-  cache: true
   print: false
   save: true
 publish: true

@@ -7,11 +7,7 @@ module ProbeDockRSpec
 
       @server = server
       @publish, @local_mode, @workspace = options[:publish], options[:local_mode], options[:workspace]
-      @cache_payload, @print_payload, @save_payload = options[:cache_payload], options[:print_payload], options[:save_payload]
-
-      cache_options = { workspace: @workspace }
-      cache_options.merge! server_name: @server.name, project_api_id: @server.project_api_id if @server
-      @cache = Cache.new cache_options
+      @print_payload, @save_payload = options[:print_payload], options[:save_payload]
 
       @uid = UID.new workspace: @workspace
     end
@@ -23,17 +19,12 @@ module ProbeDockRSpec
       test_run.uid = @uid.load_uid
 
       payload_options = {}
-
-      cache_enabled = @cache_payload && load_cache
-      payload_options[:cache] = @cache if cache_enabled
-
       return false unless payload = build_payload(test_run, payload_options)
 
       published = if !@publish
         puts Paint["ProbeDock - Publishing disabled", :yellow]
         false
       elsif publish_payload payload
-        @cache.save test_run if cache_enabled
         true
       else
         false
@@ -61,15 +52,6 @@ module ProbeDockRSpec
       styles = { warning: [ :yellow ], error: [ :bold, :red ] }
       warn Paint["ProbeDock - #{msg}", *styles[type]]
       false
-    end
-
-    def load_cache
-      begin
-        @cache.load
-      rescue Cache::Error => e
-        warn Paint["ProbeDock - #{e.message}", :yellow]
-        false
-      end
     end
 
     def print_payload payload

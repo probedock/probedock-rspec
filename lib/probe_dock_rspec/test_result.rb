@@ -40,18 +40,13 @@ module ProbeDockRSpec
         'p' => @passed,
         'd' => @duration
       }.tap do |h|
-
         h['k'] = @key if @key
         h['m'] = @message if @message
-
-        cache = options[:cache]
-        first = !cache || !cache.known?(self)
-        stale = !first && cache.stale?(self)
-        h['n'] = @name if stale or first
-        h['c'] = @category if stale or (first and @category)
-        h['g'] = @tags if stale or (first and !@tags.empty?)
-        h['t'] = @tickets if stale or (first and !@tickets.empty?)
-        h['a'] = @data if @data # FIXME: cache custom data
+        h['n'] = @name
+        h['c'] = @category
+        h['g'] = @tags
+        h['t'] = @tickets
+        h['a'] = @data
       end
     end
 
@@ -109,7 +104,7 @@ module ProbeDockRSpec
     end
 
     def extract_data example, groups = []
-      meta(example)[:data]
+      meta(example)[:data] || {}
     end
 
     def wrap a

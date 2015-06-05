@@ -21,7 +21,6 @@ describe ProbeDockRSpec::Client do
   API_URL = 'http://example.com/api'
   WORKSPACE = '/tmp'
 
-  let(:cache_double){ double }
   let(:payload_to_h){ { 'foo' => 'bar' } }
   let(:payload_double){ double to_h: payload_to_h }
   let(:uid_double){ double load_uid: '42' }
@@ -34,7 +33,6 @@ describe ProbeDockRSpec::Client do
   subject{ client }
 
   before :each do
-    allow(ProbeDockRSpec::Cache).to receive(:new).and_return(cache_double)
     allow(ProbeDockRSpec::TestPayload).to receive(:new).and_return(payload_double)
     allow(ProbeDockRSpec::UID).to receive(:new).and_return(uid_double)
   end
@@ -42,13 +40,7 @@ describe ProbeDockRSpec::Client do
   describe "when created" do
     subject{ ProbeDockRSpec::Client }
 
-    it "should create a cache manager" do
-      expect(ProbeDockRSpec::Cache).to receive(:new).with(workspace: WORKSPACE, server_name: server_options[:name], project_api_id: server_options[:project_api_id])
-      ProbeDockRSpec::Client.new server, client_options
-    end
-
     it "should not raise an error if the server is missing" do
-      expect(ProbeDockRSpec::Cache).to receive(:new).with(workspace: WORKSPACE)
       expect{ ProbeDockRSpec::Client.new nil, client_options }.not_to raise_error
     end
 
@@ -110,33 +102,6 @@ describe ProbeDockRSpec::Client do
     it "should output the error message and response body to stderr" do
       allow(server).to receive(:upload).and_raise(ProbeDockRSpec::Server::Error.new("bug", double(body: 'fubar')))
       expect_processed false, SENDING_PAYLOAD_MSG, API_URL, stderr: [ UPLOAD_FAILED_MSG, 'bug', DUMPING_RESPONSE_MSG, 'fubar' ]
-    end
-  end
-
-  describe "with payload caching enabled" do
-    let(:client_options){ super().merge cache_payload: true }
-    before :each do
-      allow(cache_double).to receive(:load).and_return(cache_double)
-      allow(cache_double).to receive(:save).and_return(cache_double)
-    end
-
-    it "should load the cache" do
-      expect(cache_double).to receive(:load)
-      expect(payload_double).to receive(:to_h).with(cache: cache_double)
-      expect_processed true, SENDING_PAYLOAD_MSG, API_URL, DONE_MSG
-    end
-
-    it "should output any error to stderr and not save the cache" do
-      allow(cache_double).to receive(:load).and_raise(ProbeDockRSpec::Cache::Error.new('bug'))
-      expect(cache_double).not_to receive(:save)
-      expect_processed true, SENDING_PAYLOAD_MSG, API_URL, DONE_MSG, stderr: [ 'bug' ]
-    end
-
-    it "should not save the cache if publishing fails" do
-      allow(server).to receive(:upload).and_raise(ProbeDockRSpec::Server::Error.new("bug"))
-      expect(cache_double).to receive(:load)
-      expect(cache_double).not_to receive(:save)
-      expect_processed false, SENDING_PAYLOAD_MSG, API_URL, stderr: [ UPLOAD_FAILED_MSG, 'bug' ]
     end
   end
 
