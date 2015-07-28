@@ -65,7 +65,7 @@ describe ProbeDockRSpec::Formatter do
       subject.start 2
       example_groups.each{ |g| subject.example_group_started double(group: g) }
     end
-    
+
     it "should add a successful result to the test run" do
 
       ex = example_double 'should work'

@@ -12,8 +12,8 @@ module ProbeDockRSpec
     def initialize output
 
       config = ProbeDockRSpec.config
-      @client = Client.new config.server, config.client_options
-      @test_run = TestRun.new config.project
+      @client = ProbeDockProbe::Client.new config.server, config.client_options
+      @test_run = ProbeDockProbe::TestRun.new config.project
 
       @groups = []
     end
@@ -55,14 +55,11 @@ module ProbeDockRSpec
 
     def add_result example_notification, successful
 
-      options = {
-        passed: successful,
-        duration: ((Time.now - @current_time) * 1000).round
-      }
-
+      options = MetaParser.parse example_notification.example, @groups
+      options.merge! passed: successful, duration: ((Time.now - @current_time) * 1000).round
       options[:message] = failure_message example_notification unless successful
 
-      @test_run.add_result example_notification.example, @groups, options
+      @test_run.add_result options
     end
 
     def failure_message example_notification
