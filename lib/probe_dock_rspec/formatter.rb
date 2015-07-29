@@ -11,7 +11,7 @@ module ProbeDockRSpec
 
     def initialize output
 
-      config = ProbeDockRSpec.config
+      config = ProbeDockProbe.config
       @client = ProbeDockProbe::Client.new config.server, config.client_options
       @test_run = ProbeDockProbe::TestRun.new config.project
 
@@ -70,10 +70,6 @@ module ProbeDockRSpec
         m << "\n"
         m << example_notification.formatted_backtrace.collect{ |l| "  # #{l}" }.join("\n")
       end
-    end
-
-    def full_example_name example
-      (@groups.collect{ |g| g.description.strip } << example.description.strip).join ' '
     end
   end
 end

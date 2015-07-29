@@ -11,12 +11,11 @@ module ProbeDockRSpec
         options[attr] = send "extract_#{attr}", example, groups
       end
 
-      grouped = extract_grouped example, groups
-      options[:grouped] = !!grouped
-
-      name_parts = extract_name_parts example, groups, grouped
+      name_parts = extract_name_parts example, groups
       options[:name] = name_parts.join ' '
       options[:fingerprint] = Digest::SHA1.hexdigest name_parts.join('|||')
+
+      # TODO: remove once Probe Dock has been migrated to use fingerprints
       options[:data][:fingerprint] = options[:fingerprint]
 
       options
@@ -24,16 +23,14 @@ module ProbeDockRSpec
 
     private
 
-    def self.extract_grouped example, groups = []
-      !!groups.collect{ |g| meta(g)[:grouped] }.compact.last
-    end
-
     def self.extract_key example, groups = []
       (groups.collect{ |g| meta(g)[:key] } << meta(example)[:key]).compact.reject{ |k| k.strip.empty? }.last
     end
 
     def self.meta holder
+
       meta = holder.metadata[:probe_dock] || {}
+
       if meta.kind_of? String
         { key: meta }
       elsif meta.kind_of? Hash
@@ -43,11 +40,8 @@ module ProbeDockRSpec
       end
     end
 
-    def self.extract_name_parts example, groups = [], grouped = false
-      parts = groups.dup
-      parts = parts[0, parts.index{ |p| meta(p)[:grouped] } + 1] if grouped
-      parts << example unless grouped
-      parts.collect{ |p| p.description.strip }
+    def self.extract_name_parts example, groups = []
+      (groups.collect(&:description) << example.description).compact.collect(&:strip).reject{ |p| p.empty? }
     end
 
     def self.extract_category example, groups = []

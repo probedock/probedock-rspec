@@ -1,22 +1,25 @@
 require 'helper'
 
-describe ProbeDockRSpec::Formatter do
-  Client ||= ProbeDockRSpec::Client
-  TestRun ||= ProbeDockRSpec::TestRun
+RSpec.describe ProbeDockRSpec::Formatter do
+  Client ||= ProbeDockProbe::Client
+  TestRun ||= ProbeDockProbe::TestRun
   Formatter ||= ProbeDockRSpec::Formatter
+  MetaParser ||= ProbeDockRSpec::MetaParser
 
   let(:server_double){ double }
   let(:client_options){ { publish: true } }
   let(:project_double){ double }
   let(:config_double){ double server: server_double, client_options: client_options, project: project_double }
   let(:client_double){ double process: nil }
+  let(:parsed_metadata){ { foo: 'bar' } }
   let(:run_double){ double :end_time= => nil, :duration= => nil, :add_result => nil }
   subject{ new_formatter }
 
   before :each do
-    allow(ProbeDockRSpec).to receive(:config).and_return(config_double)
+    allow(ProbeDockProbe).to receive(:config).and_return(config_double)
     allow(Client).to receive(:new).and_return(client_double)
     allow(TestRun).to receive(:new).and_return(run_double)
+    allow(MetaParser).to receive(:parse).and_return(parsed_metadata)
   end
 
   describe "when created" do
@@ -74,7 +77,8 @@ describe ProbeDockRSpec::Formatter do
       allow(Time).to receive(:now).and_return(now)
       subject.example_started double(example: ex)
 
-      expect(run_double).to receive(:add_result).with(ex, example_groups, passed: true, duration: 3000)
+      expect(MetaParser).to receive(:parse).with(ex, example_groups)
+      expect(run_double).to receive(:add_result).with(parsed_metadata.merge(passed: true, duration: 3000))
 
       allow(Time).to receive(:now).and_return(now + 3)
       subject.example_passed double(example: ex)
@@ -98,7 +102,8 @@ describe ProbeDockRSpec::Formatter do
         a << "  # c"
       end.join "\n"
 
-      expect(run_double).to receive(:add_result).with(ex, example_groups, passed: false, duration: 2000, message: expected_message)
+      expect(MetaParser).to receive(:parse).with(ex, example_groups)
+      expect(run_double).to receive(:add_result).with(parsed_metadata.merge(passed: false, duration: 2000, message: expected_message))
 
       allow(Time).to receive(:now).and_return(now + 2)
       subject.example_failed double(example: ex, description: 'foo', message_lines: %w(line1 line2), formatted_backtrace: %w(a b c))
@@ -110,13 +115,14 @@ describe ProbeDockRSpec::Formatter do
   end
 
   def group_double desc, options = {}
-    probe_dock_metadata = { probe_dock: options.delete(:metadata) || {} }
-    double options.merge(description: desc, metadata: probe_dock_metadata)
+    options[:metadata] ||= {}
+    double options.merge(description: desc)
   end
 
   def example_double desc, options = {}
-    execution_result = { exception: options.delete(:exception) }
-    double options.merge(description: desc, execution_result: execution_result)
+    options[:metadata] ||= {}
+    options[:execution_result] = { exception: options.delete(:exception) } if options[:exception]
+    double options.merge(description: desc)
   end
 
   def runtime_error msg

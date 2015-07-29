@@ -1,5 +1,6 @@
 # encoding: UTF-8
 require 'rspec'
+require 'probedock-ruby'
 
 module ProbeDockRSpec
   VERSION = '0.5.3'

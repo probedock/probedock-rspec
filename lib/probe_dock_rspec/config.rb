@@ -1,13 +1,9 @@
 module ProbeDockRSpec
 
-  def self.config
-    @config ||= ProbeDockProbe::Config.new
-  end
-
   def self.configure options = {}, &block
-    config.load! &block
+    ProbeDockProbe.config.load! &block
     setup! if options.fetch :setup, true
-    config
+    ProbeDockProbe.config
   end
 
   private
