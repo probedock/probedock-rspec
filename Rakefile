@@ -29,6 +29,7 @@ Jeweler::RubygemsDotOrgTasks.new
 # version tasks
 require 'rake-version'
 RakeVersion::Tasks.new do |v|
+  v.copy 'README.md'
   v.copy 'lib/probe_dock_rspec.rb'
 end
 
