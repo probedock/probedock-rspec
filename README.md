@@ -31,11 +31,11 @@ If you haven't done it already, follow the [setup procedure](#setup) below.
 To track a test with a Probe Dock test key, use RSpec metadata:
 
 ```rb
-it "should work", probe_dock: { key: 'abcdefghijkl' } do
+it "should work", probedock: { key: 'abcdefghijkl' } do
   expect(true).to be(true)
 end
 
-it(nil, probe_dock: { key: 'bcdefghijklm' }){ should validate_presence_of(:name) }
+it(nil, probedock: { key: 'bcdefghijklm' }){ should validate_presence_of(:name) }
 ```
 
 <a name="setup"></a>

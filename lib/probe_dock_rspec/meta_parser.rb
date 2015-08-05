@@ -29,7 +29,7 @@ module ProbeDockRSpec
 
     def self.meta holder
 
-      meta = holder.metadata[:probe_dock] || {}
+      meta = holder.metadata[:probedock] || {}
 
       if meta.kind_of? String
         { key: meta }

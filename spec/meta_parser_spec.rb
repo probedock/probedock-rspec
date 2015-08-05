@@ -147,11 +147,11 @@ RSpec.describe ProbeDockRSpec::MetaParser do
   end
 
   def example_double desc, metadata = {}
-    double description: desc, metadata: { probe_dock: metadata }
+    double description: desc, metadata: { probedock: metadata }
   end
 
   def group_double desc, metadata = {}
-    double description: desc, metadata: { probe_dock: metadata }
+    double description: desc, metadata: { probedock: metadata }
   end
 
   def expect_result_options options = {}
