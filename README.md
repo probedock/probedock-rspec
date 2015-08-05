@@ -49,6 +49,8 @@ This procedure is described here:
 You must then enable the client in your spec helper file (e.g. `spec/spec_helper.rb`).
 
 ```yml
+require 'probedock-rspec'
+
 ProbeDockRSpec.configure do |config|
 
   # Optional category to add to all the tests sent with this client.
