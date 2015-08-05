@@ -3,7 +3,7 @@ require 'rspec'
 require 'probedock-ruby'
 
 module ProbeDockRSpec
-  VERSION = '0.5.4'
+  VERSION = '0.5.5'
 
   class Error < StandardError; end
   class PayloadError < Error; end

@@ -17,7 +17,7 @@
 In your Gemfile:
 
 ```rb
-gem 'probedock-rspec', '~> 0.5.4'
+gem 'probedock-rspec', '~> 0.5.5'
 ```
 
 Manually:
