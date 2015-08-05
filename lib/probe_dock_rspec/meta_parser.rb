@@ -16,7 +16,7 @@ module ProbeDockRSpec
       options[:fingerprint] = Digest::SHA1.hexdigest name_parts.join('|||')
 
       # TODO: remove once Probe Dock has been migrated to use fingerprints
-      options[:data][:fingerprint] = options[:fingerprint]
+      options[:data]['fingerprint'] = options[:fingerprint]
 
       options
     end
