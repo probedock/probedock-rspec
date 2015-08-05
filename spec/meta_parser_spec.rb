@@ -166,7 +166,7 @@ RSpec.describe ProbeDockRSpec::MetaParser do
 
     result_options[:tags].sort! if result_options[:tags]
     result_options[:tickets].sort! if result_options[:tickets]
-    result_options[:data][:fingerprint] = result_options[:fingerprint] if result_options[:fingerprint]
+    result_options[:data]['fingerprint'] = result_options[:fingerprint] if result_options[:fingerprint]
 
     actual = subject.dup
     actual[:tags] = actual[:tags].dup.sort if actual.key? :tags
