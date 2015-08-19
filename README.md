@@ -18,6 +18,7 @@
 <a name="requirements"></a>
 ## Requirements
 
+* Ruby 2+
 * RSpec 3+
 
 
