@@ -15,8 +15,14 @@ module ProbeDockRSpec
       options[:name] = name_parts.join ' '
       options[:fingerprint] = Digest::SHA1.hexdigest name_parts.join('|||')
 
+      data = options[:data]
+      metadata = example.metadata
+
       # TODO: remove once Probe Dock has been migrated to use fingerprints
-      options[:data]['fingerprint'] = options[:fingerprint]
+      data['fingerprint'] = options[:fingerprint]
+
+      data['file.path'] = metadata[:file_path].to_s.sub(/^\.\//, '') if metadata[:file_path]
+      data['file.line'] = metadata[:line_number] if metadata[:line_number]
 
       options
     end
@@ -24,10 +30,10 @@ module ProbeDockRSpec
     private
 
     def self.extract_key example, groups = []
-      (groups.collect{ |g| meta(g)[:key] } << meta(example)[:key]).compact.reject{ |k| k.strip.empty? }.last
+      (groups.collect{ |g| probedock_meta(g)[:key] } << probedock_meta(example)[:key]).compact.reject{ |k| k.strip.empty? }.last
     end
 
-    def self.meta holder
+    def self.probedock_meta holder
 
       meta = holder.metadata[:probedock] || {}
 
@@ -45,20 +51,20 @@ module ProbeDockRSpec
     end
 
     def self.extract_category example, groups = []
-      cat = (groups.collect{ |g| meta(g)[:category] } << meta(example)[:category]).compact.last
+      cat = (groups.collect{ |g| probedock_meta(g)[:category] } << probedock_meta(example)[:category]).compact.last
       cat ? cat.to_s : nil
     end
 
     def self.extract_tags example, groups = []
-      (groups.collect{ |g| wrap meta(g)[:tags] } + (wrap meta(example)[:tags])).flatten.compact.uniq.collect(&:to_s)
+      (groups.collect{ |g| wrap probedock_meta(g)[:tags] } + (wrap probedock_meta(example)[:tags])).flatten.compact.uniq.collect(&:to_s)
     end
 
     def self.extract_tickets example, groups = []
-      (groups.collect{ |g| wrap meta(g)[:tickets] } + (wrap meta(example)[:tickets])).flatten.compact.uniq.collect(&:to_s)
+      (groups.collect{ |g| wrap probedock_meta(g)[:tickets] } + (wrap probedock_meta(example)[:tickets])).flatten.compact.uniq.collect(&:to_s)
     end
 
     def self.extract_data example, groups = []
-      meta(example)[:data] || {}
+      probedock_meta(example)[:data] || {}
     end
 
     def self.wrap a
