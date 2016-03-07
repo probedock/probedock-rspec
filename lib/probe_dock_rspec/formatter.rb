@@ -11,7 +11,7 @@ module ProbeDockRSpec
 
     def initialize output
 
-      config = ProbeDockProbe.config
+      config = ProbeDockRSpec.config
       @client = ProbeDockProbe::Client.new config.server, config.client_options
       @test_run = ProbeDockProbe::TestRun.new config.project
 

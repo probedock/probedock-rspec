@@ -16,7 +16,7 @@ RSpec.describe ProbeDockRSpec::Formatter do
   subject{ new_formatter }
 
   before :each do
-    allow(ProbeDockProbe).to receive(:config).and_return(config_double)
+    allow(ProbeDockRSpec).to receive(:config).and_return(config_double)
     allow(Client).to receive(:new).and_return(client_double)
     allow(TestRun).to receive(:new).and_return(run_double)
     allow(MetaParser).to receive(:parse).and_return(parsed_metadata)
