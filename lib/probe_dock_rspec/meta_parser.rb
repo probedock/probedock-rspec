@@ -7,13 +7,13 @@ module ProbeDockRSpec
 
       options = {}
 
-      %i(key category tags tickets data).each do |attr|
-        options[attr] = send "extract_#{attr}", example, groups
+      %i(key category tags tickets data active).each do |attr|
+        options[attr] = send("extract_#{attr}", example, groups)
       end
 
-      name_parts = extract_name_parts example, groups
-      options[:name] = name_parts.join ' '
-      options[:fingerprint] = Digest::SHA1.hexdigest name_parts.join('|||')
+      name_parts = extract_name_parts(example, groups)
+      options[:name] = name_parts.join(' ')
+      options[:fingerprint] = Digest::SHA1.hexdigest(name_parts.join('|||'))
 
       data = options[:data]
       metadata = example.metadata
@@ -29,12 +29,11 @@ module ProbeDockRSpec
 
     private
 
-    def self.extract_key example, groups = []
+    def self.extract_key(example, groups = [])
       (groups.collect{ |g| probedock_meta(g)[:key] } << probedock_meta(example)[:key]).compact.reject{ |k| k.strip.empty? }.last
     end
 
-    def self.probedock_meta holder
-
+    def self.probedock_meta(holder)
       meta = holder.metadata[:probedock] || {}
 
       if meta.kind_of? String
@@ -46,24 +45,29 @@ module ProbeDockRSpec
       end
     end
 
-    def self.extract_name_parts example, groups = []
+    def self.extract_name_parts(example, groups = [])
       (groups.collect(&:description) << example.description).compact.collect(&:strip).reject{ |p| p.empty? }
     end
 
-    def self.extract_category example, groups = []
+    def self.extract_category(example, groups = [])
       cat = (groups.collect{ |g| probedock_meta(g)[:category] } << probedock_meta(example)[:category]).compact.last
       cat ? cat.to_s : nil
     end
 
-    def self.extract_tags example, groups = []
+    def self.extract_active(example, groups = [])
+      active = (groups.collect{ |g| probedock_meta(g)[:active] } << probedock_meta(example)[:active]).compact.last
+      active.nil? ? nil : active
+    end
+
+    def self.extract_tags(example, groups = [])
       (groups.collect{ |g| wrap probedock_meta(g)[:tags] } + (wrap probedock_meta(example)[:tags])).flatten.compact.uniq.collect(&:to_s)
     end
 
-    def self.extract_tickets example, groups = []
+    def self.extract_tickets(example, groups = [])
       (groups.collect{ |g| wrap probedock_meta(g)[:tickets] } + (wrap probedock_meta(example)[:tickets])).flatten.compact.uniq.collect(&:to_s)
     end
 
-    def self.extract_data example, groups = []
+    def self.extract_data(example, groups = [])
       probedock_meta(example)[:data] || {}
     end
 
