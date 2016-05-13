@@ -25,7 +25,7 @@ RSpec.describe ProbeDockRSpec::MetaParser do
       })
     end
 
-    describe 'with categories, actives, tags and tickets' do
+    describe 'with categories, active flag, tags and tickets' do
       let(:groups_arg) do
         [
           group_double('A', category: 'unit', tags: %w(a b c), active: false),
@@ -34,25 +34,25 @@ RSpec.describe ProbeDockRSpec::MetaParser do
         ]
       end
 
-      it 'should override the category and active and combine the tags and tickets' do
+      it 'should override the category and active flag and combine the tags and tickets' do
         expect_result_options({
           name: 'A b c should work',
           fingerprint: sample_fingerprint,
           category: 'integration',
-					active: true,
+          active: true,
           tags: %w(a b c d),
           tickets: %w(t1 t2 t3 t4)
         })
       end
 
-      describe 'and a category and active, tags and tickets at the level of the test' do
+      describe 'and a category and active flag, tags and tickets at the level of the test' do
         let(:example_arg){ example_double 'should work', category: 'performance', tags: %w(a e), tickets: %w(t2 t4), active: false }
 
-        it 'should override the category and active and combine the tags and tickets' do
+        it 'should override the category and active flag and combine the tags and tickets' do
           expect_result_options({
             name: 'A b c should work',
             fingerprint: sample_fingerprint,
-						active: false,
+            active: false,
             category: 'performance',
             tags: %w(a b c d e),
             tickets: %w(t1 t2 t3 t4)
@@ -86,10 +86,10 @@ RSpec.describe ProbeDockRSpec::MetaParser do
     end
   end
 
-	describe 'with metadata containing an active' do
+	describe 'with metadata containing an active flag' do
    let(:example_arg){ example_double 'should work', active: false }
 
-   it 'should extract the active from the metadata' do
+   it 'should extract the active flag from the metadata' do
      expect_result_options({
        name: 'Something should work',
        fingerprint: sample_fingerprint,

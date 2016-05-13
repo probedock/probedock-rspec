@@ -55,8 +55,7 @@ module ProbeDockRSpec
     end
 
     def self.extract_active(example, groups = [])
-      active = (groups.collect{ |g| probedock_meta(g)[:active] } << probedock_meta(example)[:active]).compact.last
-      active.nil? ? nil : active
+      (groups.collect{ |g| probedock_meta(g)[:active] } << probedock_meta(example)[:active]).compact.last
     end
 
     def self.extract_tags(example, groups = [])
