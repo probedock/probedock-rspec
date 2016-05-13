@@ -7,50 +7,52 @@ RSpec.describe ProbeDockRSpec::MetaParser do
   let(:sample_fingerprint){ '66d8e9645db2878b53b6dd51acb672e97c389c87' }
   subject{ described_class.parse example_arg, groups_arg }
 
-  it "should extract the name and fingerprint of a test with no metadata" do
+  it 'should extract the name and fingerprint of a test with no metadata' do
     expect_result_options({
       name: 'Something should work',
       fingerprint: sample_fingerprint
     })
   end
 
-  describe "with multiple groups" do
+  describe 'with multiple groups' do
     let(:groups_arg){ [ group_double('A'), group_double('b'), group_double('c') ] }
     let(:sample_fingerprint){ '1c22e0ad110dc5b07761beec69712267fc384152' }
 
-    it "should build the name and fingerprint by concatenating all group descriptions and the example description" do
+    it 'should build the name and fingerprint by concatenating all group descriptions and the example description' do
       expect_result_options({
         name: 'A b c should work',
         fingerprint: sample_fingerprint
       })
     end
 
-    describe "with categories, tags and tickets" do
+    describe 'with categories, active flag, tags and tickets' do
       let(:groups_arg) do
         [
-          group_double('A', category: 'unit', tags: %w(a b c)),
+          group_double('A', category: 'unit', tags: %w(a b c), active: false),
           group_double('b', tickets: %w(t1 t3)),
-          group_double('c', category: 'integration', tags: %w(a c d), tickets: %w(t1 t2 t4))
+          group_double('c', category: 'integration', tags: %w(a c d), tickets: %w(t1 t2 t4), active: true),
         ]
       end
 
-      it "should override the category and combine the tags and tickets" do
+      it 'should override the category and active flag and combine the tags and tickets' do
         expect_result_options({
           name: 'A b c should work',
           fingerprint: sample_fingerprint,
           category: 'integration',
+          active: true,
           tags: %w(a b c d),
           tickets: %w(t1 t2 t3 t4)
         })
       end
 
-      describe "and a category, tags and tickets at the level of the test" do
-        let(:example_arg){ example_double 'should work', category: 'performance', tags: %w(a e), tickets: %w(t2 t4) }
+      describe 'and a category and active flag, tags and tickets at the level of the test' do
+        let(:example_arg){ example_double 'should work', category: 'performance', tags: %w(a e), tickets: %w(t2 t4), active: false }
 
-        it "should override the category and combine the tags and tickets" do
+        it 'should override the category and active flag and combine the tags and tickets' do
           expect_result_options({
             name: 'A b c should work',
             fingerprint: sample_fingerprint,
+            active: false,
             category: 'performance',
             tags: %w(a b c d e),
             tickets: %w(t1 t2 t3 t4)
@@ -60,10 +62,10 @@ RSpec.describe ProbeDockRSpec::MetaParser do
     end
   end
 
-  describe "with metadata containing a key" do
+  describe 'with metadata containing a key' do
     let(:example_arg){ example_double 'should work', key: 'abc' }
 
-    it "should extract the key from the metadata" do
+    it 'should extract the key from the metadata' do
       expect_result_options({
         key: 'abc',
         name: 'Something should work',
@@ -72,10 +74,10 @@ RSpec.describe ProbeDockRSpec::MetaParser do
     end
   end
 
-  describe "with metadata containing a category" do
+  describe 'with metadata containing a category' do
     let(:example_arg){ example_double 'should work', category: 'integration' }
 
-    it "should extract the category from the metadata" do
+    it 'should extract the category from the metadata' do
       expect_result_options({
         name: 'Something should work',
         fingerprint: sample_fingerprint,
@@ -84,10 +86,22 @@ RSpec.describe ProbeDockRSpec::MetaParser do
     end
   end
 
-  describe "with metadata containing tags" do
+	describe 'with metadata containing an active flag' do
+   let(:example_arg){ example_double 'should work', active: false }
+
+   it 'should extract the active flag from the metadata' do
+     expect_result_options({
+       name: 'Something should work',
+       fingerprint: sample_fingerprint,
+       active: false
+     })
+   end
+ end
+
+  describe 'with metadata containing tags' do
     let(:example_arg){ example_double 'should work', tags: %w(a b c) }
 
-    it "should extract the tags from the metadata" do
+    it 'should extract the tags from the metadata' do
       expect_result_options({
         name: 'Something should work',
         fingerprint: sample_fingerprint,
@@ -96,10 +110,10 @@ RSpec.describe ProbeDockRSpec::MetaParser do
     end
   end
 
-  describe "with metadata containing tickets" do
+  describe 'with metadata containing tickets' do
     let(:example_arg){ example_double 'should work', tickets: %w(t1 t2) }
 
-    it "should extract the tickets from the metadata" do
+    it 'should extract the tickets from the metadata' do
       expect_result_options({
         name: 'Something should work',
         fingerprint: sample_fingerprint,
@@ -108,10 +122,10 @@ RSpec.describe ProbeDockRSpec::MetaParser do
     end
   end
 
-  describe "with metadata containing custom data" do
+  describe 'with metadata containing custom data' do
     let(:example_arg){ example_double 'should work', data: { foo: 'bar', baz: 'qux' } }
 
-    it "should extract the tickets from the metadata" do
+    it 'should extract the tickets from the metadata' do
       expect_result_options({
         name: 'Something should work',
         fingerprint: sample_fingerprint,
@@ -123,10 +137,10 @@ RSpec.describe ProbeDockRSpec::MetaParser do
     end
   end
 
-  describe "with string metadata" do
+  describe 'with string metadata' do
     let(:example_arg){ example_double 'should work', 'abc' }
 
-    it "should use the metadata as key" do
+    it 'should use the metadata as key' do
       expect_result_options({
         key: 'abc',
         name: 'Something should work',
@@ -135,10 +149,10 @@ RSpec.describe ProbeDockRSpec::MetaParser do
     end
   end
 
-  describe "with unexpected metadata" do
+  describe 'with unexpected metadata' do
     let(:example_arg){ example_double 'should work', 42 }
 
-    it "should extract the name and fingerprint of the test" do
+    it 'should extract the name and fingerprint of the test' do
       expect_result_options({
         name: 'Something should work',
         fingerprint: sample_fingerprint
@@ -146,19 +160,20 @@ RSpec.describe ProbeDockRSpec::MetaParser do
     end
   end
 
-  def example_double desc, metadata = {}
+  def example_double(desc, metadata = {})
     double description: desc, metadata: { probedock: metadata }
   end
 
-  def group_double desc, metadata = {}
+  def group_double(desc, metadata = {})
     double description: desc, metadata: { probedock: metadata }
   end
 
-  def expect_result_options options = {}
+  def expect_result_options(options = {})
 
     result_options = {
       key: nil,
       category: nil,
+      active: nil,
       tags: [],
       tickets: [],
       data: {}
