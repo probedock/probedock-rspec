@@ -4,7 +4,7 @@ source "http://rubygems.org"
 #   gem "activesupport", ">= 2.3.5"
 
 gem 'rspec', '~> 3.1'
-gem 'probedock-ruby', '~> 0.1.5'
+gem 'probedock-ruby', '~> 0.2.1'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
