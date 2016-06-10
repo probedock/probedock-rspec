@@ -4,13 +4,13 @@ source "http://rubygems.org"
 #   gem "activesupport", ">= 2.3.5"
 
 gem 'rspec', '~> 3.1'
-gem 'probedock-ruby', '~> 0.1'
+gem 'probedock-ruby', '~> 0.1.5'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
 group :development do
   gem 'jeweler', '~> 2.0'
-  gem 'rake-version', '~> 0.4'
+  gem 'rake-version', '~> 1.0'
   gem 'simplecov', '~> 0.10', require: false
   gem 'fakefs', '~> 0.6', require: 'fakefs/safe'
   gem 'rspec-its', '~> 1.2'

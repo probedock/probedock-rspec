@@ -9,8 +9,8 @@ module ProbeDockRSpec
 
   def self.configure options = {}, &block
     setup! if options.fetch :setup, true
-    config.project.category = 'RSpec'
     config.load! &block
+    config.project.category ||= 'RSpec'
     config
   end
 

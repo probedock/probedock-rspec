@@ -33,7 +33,7 @@ RSpec.describe ProbeDockRSpec do
   end
 
   describe ".configure" do
-    let(:project_double){ double :'category=' => nil }
+    let(:project_double){ double :category => nil, :'category=' => nil }
     let(:config_double){ double load!: nil, project: project_double }
     let(:rspec_config_double){ double add_formatter: nil }
 
