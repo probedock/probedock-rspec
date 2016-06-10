@@ -29,7 +29,7 @@
 Add it to your Gemfile:
 
 ```rb
-gem 'probedock-rspec', '~> 0.7.0'
+gem 'probedock-rspec', '~> 0.7.1'
 ```
 
 Then run `bundle install`.
